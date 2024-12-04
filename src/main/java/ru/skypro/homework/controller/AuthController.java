@@ -23,6 +23,7 @@ public class AuthController {
 
     private final AuthService authService;
 
+
     @PostMapping("/login")
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<?> login(@RequestBody Login login) {
