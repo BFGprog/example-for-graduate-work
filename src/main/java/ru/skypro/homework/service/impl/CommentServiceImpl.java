@@ -11,7 +11,6 @@ public class CommentServiceImpl implements CommentService {
     public Comments getCommentsForAd(Integer id) {
         return null;
     }
-
     @Override
     public Comment addComment(Integer adId, CreateOrUpdateComment comment) {
         return null;

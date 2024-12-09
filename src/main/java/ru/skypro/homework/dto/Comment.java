@@ -108,7 +108,6 @@ public class Comment {
 
     public Comment() {
     }
-
     public Comment(Integer author, String authorImage, String authorFirstName, Integer createdAt, Integer pk, String text) {
         this.author = author;
         this.authorImage = authorImage;
