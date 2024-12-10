@@ -2,7 +2,7 @@ package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class ExtendedAd {
+public class ExtendedAdDto {
     @Schema(type = "integer",
             description = "id объявления")
     public Integer pk;

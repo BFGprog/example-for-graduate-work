@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
-public class Comment {
+public class CommentDto {
 
     @Schema(type = "integer",
             format = "int32",
@@ -49,8 +49,8 @@ public class Comment {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(author, comment.author) && Objects.equals(authorImage, comment.authorImage) && Objects.equals(authorFirstName, comment.authorFirstName) && Objects.equals(createdAt, comment.createdAt) && Objects.equals(pk, comment.pk) && Objects.equals(text, comment.text);
+        CommentDto commentDto = (CommentDto) o;
+        return Objects.equals(author, commentDto.author) && Objects.equals(authorImage, commentDto.authorImage) && Objects.equals(authorFirstName, commentDto.authorFirstName) && Objects.equals(createdAt, commentDto.createdAt) && Objects.equals(pk, commentDto.pk) && Objects.equals(text, commentDto.text);
     }
 
     @Override
@@ -106,10 +106,10 @@ public class Comment {
         this.text = text;
     }
 
-    public Comment() {
+    public CommentDto() {
     }
 
-    public Comment(Integer author, String authorImage, String authorFirstName, Integer createdAt, Integer pk, String text) {
+    public CommentDto(Integer author, String authorImage, String authorFirstName, Integer createdAt, Integer pk, String text) {
         this.author = author;
         this.authorImage = authorImage;
         this.authorFirstName = authorFirstName;

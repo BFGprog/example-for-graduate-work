@@ -2,12 +2,13 @@ package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class User {
-
-    private  Integer id;
-    @Schema(type = "string",
+public class UserDto {
+    @Schema(type = "integer",
+            format="int32",
             description = "логин пользователя")
     private  String email;
+    private  Integer id;
+
     @Schema(type = "string",
             description = "имя пользователя")
     private  String firstName;
@@ -20,18 +21,18 @@ public class User {
     @Schema(type = "string",
             description = "роль пользователя",
             allowableValues = {"USER","ADMIN"})
-    private  Role role;
+    private RoleDto roleDto;
     @Schema(type = "string",
             description = "ссылка на аватар пользователя")
     private  String image;
 
-    public User(Integer id, String email, String firstName, String lastName, String phone, Role role, String image) {
+    public UserDto(Integer id, String email, String firstName, String lastName, String phone, RoleDto roleDto, String image) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.role = role;
+        this.roleDto = roleDto;
         this.image = image;
     }
 
@@ -75,12 +76,12 @@ public class User {
         this.phone = phone;
     }
 
-    public Role getRole() {
-        return role;
+    public RoleDto getRole() {
+        return roleDto;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRole(RoleDto roleDto) {
+        this.roleDto = roleDto;
     }
 
     public String getImage() {
@@ -99,7 +100,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
-                ", role=" + role +
+                ", role=" + roleDto +
                 ", image='" + image + '\'' +
                 '}';
     }

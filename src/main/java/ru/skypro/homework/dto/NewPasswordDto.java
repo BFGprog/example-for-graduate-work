@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
-public class NewPassword {
+public class NewPasswordDto {
     @Schema(type = "string",
             description = "текущий пароль",
             minLength = 8,
@@ -19,8 +19,8 @@ public class NewPassword {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof NewPassword)) return false;
-        NewPassword that = (NewPassword) o;
+        if (!(o instanceof NewPasswordDto)) return false;
+        NewPasswordDto that = (NewPasswordDto) o;
         return Objects.equals(currentPassword, that.currentPassword) && Objects.equals(newPassword, that.newPassword);
     }
 
