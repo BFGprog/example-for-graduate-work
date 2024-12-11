@@ -9,7 +9,6 @@ import ru.skypro.homework.dto.CreateOrUpdateComment;
 public interface CommentService {
 
     public Comments getCommentsForAd(Integer id);
-
     public Comment addComment(Integer adId, CreateOrUpdateComment comment);
 
     public Comment updateComment(Integer adId, Integer commentId, CreateOrUpdateComment comment);

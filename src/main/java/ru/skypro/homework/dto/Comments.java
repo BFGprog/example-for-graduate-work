@@ -54,9 +54,10 @@ public class Comments {
 
     public Comments() {
     }
-
     public Comments(Integer count, List<Comment> results) {
         this.count = count;
         this.results = results;
     }
+
+
 }

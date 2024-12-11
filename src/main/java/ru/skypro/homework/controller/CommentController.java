@@ -24,6 +24,7 @@ public class CommentController {
         return commentService.getCommentsForAd(id);
     }
 
+
     @PostMapping("/{id}/comments")
     @Operation(summary = "Добавление комментария к объявлению")
     public Comment addComment(@PathVariable Integer adId,
