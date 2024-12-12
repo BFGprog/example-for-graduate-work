@@ -5,10 +5,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.Ads;
-import ru.skypro.homework.dto.CreateOrUpdateAd;
-import ru.skypro.homework.dto.ExtendedAd;
+import ru.skypro.homework.dto.CreateOrUpdateAdDto;
+import ru.skypro.homework.dto.ExtendedAdDto;
 import ru.skypro.homework.service.AdsService;
 
 @RestController
@@ -28,13 +27,13 @@ public class AdsController {
     @PostMapping
     @Operation(summary = "Добавление объявления")
     public Ads addAd(@RequestParam("image") MultipartFile image,
-                     @RequestBody CreateOrUpdateAd ad) {
+                     @RequestBody CreateOrUpdateAdDto ad) {
         return adsService.addAds(image, ad);
     }
 
     @GetMapping("{id}")
     @Operation(summary = "Получение информации об объявлении")
-    public ExtendedAd getAdById(@PathVariable Integer id) {
+    public ExtendedAdDto getAdById(@PathVariable Integer id) {
         return adsService.getAdById(id);
 
     }
@@ -50,7 +49,7 @@ public class AdsController {
     @PatchMapping("{id}")
     @Operation(summary = "Обновление информации об объявлении")
     public String updateAdById(@PathVariable Integer id,
-                               @RequestBody CreateOrUpdateAd ad) {
+                               @RequestBody CreateOrUpdateAdDto ad) {
         adsService.updateAdById(id, ad);
         return "Объявление обновлено";
 
@@ -64,7 +63,7 @@ public class AdsController {
     @PatchMapping("{id}/image")
     @Operation(summary = "Обновление картинки объявления")
     public String updateImageAd(@PathVariable Integer id,
-                               @RequestBody CreateOrUpdateAd ad) {
+                               @RequestBody CreateOrUpdateAdDto ad) {
         adsService.updateImageAd(id, ad);
         return "Картинка обновлена";
 

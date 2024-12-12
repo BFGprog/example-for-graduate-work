@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class Login {
+public class LoginDto {
     @Schema(type = "string",
             description = "логин",
             minLength = 4,
@@ -18,7 +18,7 @@ public class Login {
     private String password;
 
 
-    public Login(String username, String password) {
+    public LoginDto(String username, String password) {
         this.username = username;
         this.password = password;
     }

@@ -10,9 +10,9 @@ public class Ads {
             description = "общее количество объявлений")
     private Integer count;
     @Schema(description = "Список объявлений")
-    private Ad results;
+    private AdDto results;
 
-    public Ads(Integer count, Ad results) {
+    public Ads(Integer count, AdDto results) {
         this.count = count;
         this.results = results;
     }
@@ -25,11 +25,11 @@ public class Ads {
         this.count = count;
     }
 
-    public Ad getResults() {
+    public AdDto getResults() {
         return results;
     }
 
-    public void setResults(Ad results) {
+    public void setResults(AdDto results) {
         this.results = results;
     }
 

@@ -4,15 +4,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
-public class Ad {
+public class AdDto {
     @Schema(type = "integer",
             format = "int32",
             description = "id автора объявления")
-    Integer id;
+    Integer author;
 
     @Schema(type = "string",
             description = "ссылка на картинку объявления")
-    Integer image;
+    String image;
     @Schema(type = "integer",
             format = "int32",
             description = "id объявления")
@@ -23,31 +23,34 @@ public class Ad {
             description = "id объявления")
     Integer price;
 
-@Schema(type = "string",
+    @Schema(type = "string",
             description = "заголовок объявления")
-    Integer title;
+    String title;
 
-    public Ad(Integer id, Integer image, Integer pk, Integer price, Integer title) {
-        this.id = id;
+    public AdDto(Integer author, String image, Integer pk, Integer price, String title) {
+        this.author = author;
         this.image = image;
         this.pk = pk;
         this.price = price;
         this.title = title;
     }
 
-    public Integer getId() {
-        return id;
+    public AdDto() {
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getAuthor() {
+        return author;
     }
 
-    public Integer getImage() {
+    public void setAuthor(Integer author) {
+        this.author = author;
+    }
+
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Integer image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -67,31 +70,31 @@ public class Ad {
         this.price = price;
     }
 
-    public Integer getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(Integer title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Ad)) return false;
-        Ad ad = (Ad) o;
-        return Objects.equals(id, ad.id) && Objects.equals(image, ad.image) && Objects.equals(pk, ad.pk) && Objects.equals(price, ad.price) && Objects.equals(title, ad.title);
+        if (!(o instanceof AdDto)) return false;
+        AdDto adDto = (AdDto) o;
+        return Objects.equals(author, adDto.author) && Objects.equals(image, adDto.image) && Objects.equals(pk, adDto.pk) && Objects.equals(price, adDto.price) && Objects.equals(title, adDto.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, image, pk, price, title);
+        return Objects.hash(author, image, pk, price, title);
     }
 
     @Override
     public String toString() {
         return "Ad{" +
-                "id=" + id +
+                "author=" + author +
                 ", image=" + image +
                 ", pk=" + pk +
                 ", price=" + price +
