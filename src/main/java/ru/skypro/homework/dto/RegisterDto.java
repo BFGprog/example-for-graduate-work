@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class Register {
+public class RegisterDto {
     @Schema(type = "string",
             description = "логин",
             minLength = 4,
@@ -32,15 +32,15 @@ public class Register {
     @Schema(type = "string",
             description = "роль пользователя",
             allowableValues = {"USER", "ADMIN"})
-    private Role role;
+    private RoleDto roleDto;
 
-    public Register(String username, String password, String firstName, String lastName, String phone, Role role) {
+    public RegisterDto(String username, String password, String firstName, String lastName, String phone, RoleDto roleDto) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.role = role;
+        this.roleDto = roleDto;
     }
 
     public String getUsername() {
@@ -83,11 +83,11 @@ public class Register {
         this.phone = phone;
     }
 
-    public Role getRole() {
-        return role;
+    public RoleDto getRoleDto() {
+        return roleDto;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoleDto(RoleDto roleDto) {
+        this.roleDto = roleDto;
     }
 }

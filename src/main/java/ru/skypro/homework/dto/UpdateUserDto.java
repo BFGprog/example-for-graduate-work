@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
-public class UpdateUser {
+public class UpdateUserDto {
     @Schema(type = "string",
             description = "имя пользователя",
             minLength = 3,
@@ -48,8 +48,8 @@ public class UpdateUser {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UpdateUser)) return false;
-        UpdateUser that = (UpdateUser) o;
+        if (!(o instanceof UpdateUserDto)) return false;
+        UpdateUserDto that = (UpdateUserDto) o;
         return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(phone, that.phone);
     }
 

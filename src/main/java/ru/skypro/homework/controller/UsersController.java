@@ -5,10 +5,9 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.NewPassword;
-import ru.skypro.homework.dto.User;
+import ru.skypro.homework.dto.NewPasswordDto;
+import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.service.UsersService;
-import ru.skypro.homework.service.impl.UsersServiceImpl;
 
 @RestController
 @RequestMapping("/users")
@@ -19,13 +18,13 @@ public class UsersController {
 
     @PostMapping("/set_password")
     @Operation(summary = "Обновление пароля")
-    public String setPassword(@RequestBody NewPassword newPassword) {
-        return usersService.setPassword(newPassword);
+    public String setPassword(@RequestBody NewPasswordDto newPasswordDto) {
+        return usersService.setPassword(newPasswordDto);
 
     }
     @GetMapping("/me")
     @Operation(summary = "Получение информации об авторизованном пользователе")
-    public User getUser() {
+    public UserDto getUser() {
         return usersService.getUser();
 
     }

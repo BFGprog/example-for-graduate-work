@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
-public class CreateOrUpdateAd {
+public class CreateOrUpdateAdDto {
     @Schema(type = "string",
             description = "заголовок объявления",
             minLength = 4,
@@ -22,7 +22,7 @@ public class CreateOrUpdateAd {
             maxLength = 64)
     private String description;
 
-    public CreateOrUpdateAd(String title, Integer price, String description) {
+    public CreateOrUpdateAdDto(String title, Integer price, String description) {
         this.title = title;
         this.price = price;
         this.description = description;
@@ -55,8 +55,8 @@ public class CreateOrUpdateAd {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CreateOrUpdateAd)) return false;
-        CreateOrUpdateAd that = (CreateOrUpdateAd) o;
+        if (!(o instanceof CreateOrUpdateAdDto)) return false;
+        CreateOrUpdateAdDto that = (CreateOrUpdateAdDto) o;
         return Objects.equals(title, that.title) && Objects.equals(price, that.price) && Objects.equals(description, that.description);
     }
 
