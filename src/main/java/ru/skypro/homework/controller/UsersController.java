@@ -4,10 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.service.UsersService;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/users")
@@ -35,9 +39,10 @@ public class UsersController {
 
     }
 
-    @PatchMapping("/me/image")
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Обновление аватара авторизованного пользователя")
-    public String updateUserImage() {
+    public String updateUserImage(@RequestParam MultipartFile file) throws IOException {
+        usersService.uploadImage(file);
         return null;
 
     }
