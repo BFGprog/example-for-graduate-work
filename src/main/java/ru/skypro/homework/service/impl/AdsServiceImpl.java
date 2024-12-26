@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
@@ -14,7 +15,7 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public Ads addAds(MultipartFile image, CreateOrUpdateAdDto ad) {
+    public Ads addAds(MultipartFile image, CreateOrUpdateAdDto ad, Authentication authentication) {
         return null;
     }
 
