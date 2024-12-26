@@ -17,9 +17,12 @@ public class User {
     private String lastName;        //фамилия пользователя
     private String phone;           //телефон пользователя
     private RoleDto roleDto;        //роль пользователя
-    private String image;           //ссылка на аватар пользователя
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;           //ссылка на аватар пользователя
+    private String password;
 
-    public User(Integer id, String email, String firstName, String lastName, String phone, RoleDto roleDto, String image) {
+    public User(Integer id, String email, String firstName, String lastName, String phone, RoleDto roleDto, Image image, String password) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -27,9 +30,31 @@ public class User {
         this.phone = phone;
         this.roleDto = roleDto;
         this.image = image;
+        this.password = password;
     }
 
     public User() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && roleDto == user.roleDto && Objects.equals(image, user.image) && Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, firstName, lastName, phone, roleDto, image, password);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Integer getId() {
@@ -80,25 +105,12 @@ public class User {
         this.roleDto = roleDto;
     }
 
-    public String getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Image image) {
         this.image = image;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && roleDto == user.roleDto && Objects.equals(image, user.image);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, firstName, lastName, phone, roleDto, image);
     }
 
     @Override

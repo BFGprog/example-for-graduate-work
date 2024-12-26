@@ -3,6 +3,8 @@ package ru.skypro.homework.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
@@ -25,10 +27,12 @@ public class AdsController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Добавление объявления")
     public Ads addAd(@RequestParam("image") MultipartFile image,
-                     @RequestBody CreateOrUpdateAdDto ad) {
-        return adsService.addAds(image, ad);
+                     @RequestBody CreateOrUpdateAdDto ad,
+                     Authentication authentication) {
+        return adsService.addAds(image, ad, authentication);
     }
 
     @GetMapping("{id}")
@@ -39,6 +43,7 @@ public class AdsController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN') or @adServiceImpl.findAdById(id).author.email.equals(authentication.name)")
     @Operation(summary = "Удаление объявления")
     public String removeAd(@PathVariable Integer id) {
         adsService.removeAd(id);
@@ -47,6 +52,7 @@ public class AdsController {
     }
 
     @PatchMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN') or adServiceImpl.findAdById(id).author.email.equals(authentication.name)")
     @Operation(summary = "Обновление информации об объявлении")
     public String updateAdById(@PathVariable Integer id,
                                @RequestBody CreateOrUpdateAdDto ad) {
@@ -55,12 +61,14 @@ public class AdsController {
 
     }
     @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Получение объявлений авторизованного пользователя")
     public Ads getUserAds() {
         return adsService.getUserAds();
 
     }
     @PatchMapping("{id}/image")
+    @PreAuthorize("hasRole('ADMIN') or adServiceImpl.findAdById(id).author.email.equals(authentication.name)")
     @Operation(summary = "Обновление картинки объявления")
     public String updateImageAd(@PathVariable Integer id,
                                @RequestBody CreateOrUpdateAdDto ad) {

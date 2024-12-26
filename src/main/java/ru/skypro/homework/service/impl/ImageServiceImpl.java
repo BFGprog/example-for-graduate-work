@@ -27,7 +27,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void uploadImage(MultipartFile file) throws IOException {
+    public Image uploadImage(MultipartFile file) throws IOException {
 
         try (InputStream is = file.getInputStream();
              ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -39,7 +39,7 @@ public class ImageServiceImpl implements ImageService {
             Image saveImage = new Image();
             saveImage.setData(baos.toByteArray());
 
-            imageRepository.save(saveImage);
+            return imageRepository.save(saveImage);
         }
     }
 
