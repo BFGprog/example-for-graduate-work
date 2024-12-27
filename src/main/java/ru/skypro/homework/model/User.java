@@ -16,6 +16,7 @@ public class User {
     private String firstName;       //имя пользователя
     private String lastName;        //фамилия пользователя
     private String phone;           //телефон пользователя
+    @Enumerated(EnumType.STRING)
     private RoleDto roleDto;        //роль пользователя
     @OneToOne
     @JoinColumn(name = "image_id")

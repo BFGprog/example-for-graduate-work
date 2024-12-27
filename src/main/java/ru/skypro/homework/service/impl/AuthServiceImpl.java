@@ -41,6 +41,8 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.findByEmail(registerDto.getUsername()) != null) {
             throw new IllegalArgumentException(registerDto.getUsername() + " Mail is already registered");
         }
+        String encode = encoder.encode(registerDto.getPassword());
+        registerDto.setPassword(encode);
         User registerUser = userMapper.toRegisterUser(registerDto);
         userRepository.save(registerUser);
         return true;
