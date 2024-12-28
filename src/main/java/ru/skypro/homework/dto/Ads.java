@@ -1,56 +1,36 @@
 package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Objects;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
+/**
+ * Класс, представляющий DTO для списка объявлений.
+ * Используется для передачи списка объявлений и общего количества объявлений.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ads {
-    @Schema(type = "integer",
-            format = "int32",
-            description = "общее количество объявлений")
+
+    /**
+     * Общее количество объявлений.
+     * Поле не может быть отрицательным, но может быть равно 0.
+     */
+    @Schema(type = "integer", format = "int32", description = "общее количество объявлений")
+    @Min(value = 0, message = "Количество объявлений не может быть отрицательным")
     private Integer count;
+
+    /**
+     * Список объявлений.
+     * Поле может быть пустым, но не может быть null.
+     */
     @Schema(description = "Список объявлений")
-    private AdDto results;
-
-    public Ads(Integer count, AdDto results) {
-        this.count = count;
-        this.results = results;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public AdDto getResults() {
-        return results;
-    }
-
-    public void setResults(AdDto results) {
-        this.results = results;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Ads)) return false;
-        Ads ads = (Ads) o;
-        return Objects.equals(count, ads.count) && Objects.equals(results, ads.results);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(count, results);
-    }
-
-    @Override
-    public String toString() {
-        return "Ads{" +
-                "count=" + count +
-                ", results=" + results +
-                '}';
-    }
+    @NotNull(message = "Список объявлений обязателен")
+    private List<AdDto> results;
 }

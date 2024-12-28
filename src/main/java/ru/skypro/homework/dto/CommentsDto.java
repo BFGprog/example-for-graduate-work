@@ -1,63 +1,36 @@
 package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 
+/**
+ * Класс, представляющий DTO для списка комментариев.
+ * Используется для передачи списка комментариев и общего количества комментариев.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommentsDto {
 
-    @Schema(type = "integer",
-            format = "int32",
-            description = "общее количество комментариев")
+    /**
+     * Общее количество комментариев.
+     * Поле не может быть отрицательным.
+     */
+    @Schema(type = "integer", format = "int32", description = "общее количество комментариев")
+    @Min(value = 0, message = "Количество комментариев не может быть отрицательным")
     private Integer count;
 
+    /**
+     * Список комментариев.
+     * Поле обязательно для заполнения.
+     */
     @Schema(description = "Список комментариев")
+    @NotNull(message = "Список комментариев обязателен")
     private List<CommentDto> results;
-
-    @Override
-    public String toString() {
-        return "Comments{" +
-                "count=" + count +
-                ", results=" + results +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CommentsDto commentsDto = (CommentsDto) o;
-        return Objects.equals(count, commentsDto.count) && Objects.equals(results, commentsDto.results);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(count, results);
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
-    public List<CommentDto> getResults() {
-        return results;
-    }
-
-    public void setResults(List<CommentDto> results) {
-        this.results = results;
-    }
-
-    public CommentsDto() {
-    }
-    public CommentsDto(Integer count, List<CommentDto> results) {
-        this.count = count;
-        this.results = results;
-    }
-
-
 }

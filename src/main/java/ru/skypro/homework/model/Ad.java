@@ -1,113 +1,61 @@
 package ru.skypro.homework.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Objects;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
+/**
+ * Класс, представляющий сущность "Объявление".
+ * Используется для хранения информации о товаре, размещенном на продажу.
+ */
 @Entity
 @Table(name = "ad")
+@Data // Автоматически генерирует геттеры, сеттеры, toString, equals и hashCode
+@NoArgsConstructor // Конструктор без аргументов
+@AllArgsConstructor // Конструктор со всеми аргументами
 public class Ad {
+
+    /**
+     * Уникальный идентификатор объявления (первичный ключ).
+     * Генерируется автоматически при добавлении записи в базу данных.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk;
-    //    id обьявления
-    private Integer author;
-    //    id автора обьявления
+
+    /**
+     * Ссылка на изображение товара.
+     * Может быть длинным URL-адресом, поэтому используется тип TEXT.
+     */
+    @Column(columnDefinition = "TEXT")
     private String image;
-    //    ссылка на картинку объявления
-//
+
+    /**
+     * Цена товара.
+     * Не может быть отрицательной (валидация через @Min).
+     * Поле обязательно для заполнения (валидация через @NotNull).
+     */
+    @Min(value = 0, message = "Цена не может быть отрицательной")
+    @NotNull(message = "Цена обязательна")
     private Integer price;
-    //    цена обьявления
+
+    /**
+     * Заголовок объявления.
+     * Может быть длинным, поэтому используется тип TEXT.
+     */
+    @Column(columnDefinition = "TEXT")
     private String title;
-//    заголовок объявления
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    /**
+     * Связь с пользователем, который создал объявление.
+     * Используется ленивая загрузка (FetchType.LAZY) для оптимизации.
+     * Поле обязательно для заполнения (nullable = false).
+     */
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    public Ad(Integer pk, Integer author, String image, Integer price, String title, User user) {
-        this.pk = pk;
-        this.author = author;
-        this.image = image;
-        this.price = price;
-        this.title = title;
-        this.user = user;
-    }
-
-    public Ad() {
-    }
-
-    public Integer getPk() {
-        return pk;
-    }
-
-    public void setPk(Integer pk) {
-        this.pk = pk;
-    }
-
-    public Integer getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Integer author) {
-        this.author = author;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Ad)) return false;
-        Ad ad = (Ad) o;
-        return Objects.equals(pk, ad.pk) && Objects.equals(author, ad.author) && Objects.equals(image, ad.image) && Objects.equals(price, ad.price) && Objects.equals(title, ad.title) && Objects.equals(user, ad.user);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pk, author, image, price, title, user);
-    }
-
-    @Override
-    public String toString() {
-        return "AdModel{" +
-                "pk=" + pk +
-                ", author=" + author +
-                ", image='" + image + '\'' +
-                ", price=" + price +
-                ", title='" + title + '\'' +
-                ", user=" + user +
-                '}';
-    }
 }
-

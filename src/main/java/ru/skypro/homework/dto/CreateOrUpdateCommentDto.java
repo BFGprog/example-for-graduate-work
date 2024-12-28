@@ -2,50 +2,29 @@ package ru.skypro.homework.dto;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
-import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
+/**
+ * Класс, представляющий DTO для создания или обновления комментария.
+ * Используется для передачи данных о комментарии между слоями приложения.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateOrUpdateCommentDto {
 
-    @Schema(required = true,
-            type = "string",
-            description = "текст комментария",
-            minLength = 8,
-            maxLength = 64)
+    /**
+     * Текст комментария.
+     * Должен содержать от 8 до 64 символов.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(required = true, type = "string", description = "текст комментария", minLength = 8, maxLength = 64)
+    @Size(min = 8, max = 64, message = "Текст комментария должен содержать от 8 до 64 символов")
+    @NotBlank(message = "Текст комментария обязателен")
     private String text;
-
-    @Override
-    public String toString() {
-        return "CreateOrUpdateComment{" +
-                "text='" + text + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CreateOrUpdateCommentDto that = (CreateOrUpdateCommentDto) o;
-        return Objects.equals(text, that.text);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(text);
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public CreateOrUpdateCommentDto() {
-    }
-
-    public CreateOrUpdateCommentDto(String text) {
-        this.text = text;
-    }
 }

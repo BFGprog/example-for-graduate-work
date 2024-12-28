@@ -1,101 +1,62 @@
 package ru.skypro.homework.model;
 
-import javax.persistence.*;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+/**
+ * Класс, представляющий сущность "Комментарий".
+ * Используется для хранения комментариев к объявлениям.
+ */
 @Entity
-@Table(name="comment")
+@Table(name = "comment")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment {
 
+    /**
+     * Уникальный идентификатор комментария (первичный ключ).
+     * Генерируется автоматически при добавлении записи в базу данных.
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer pk;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
+    /**
+     * Текст комментария.
+     * Может быть длинным, поэтому используется тип TEXT.
+     */
+    @Column(columnDefinition = "TEXT")
     private String text;
 
-    @Column(name = "createdat")
-    private Integer createdAt;
+    /**
+     * Время создания комментария.
+     * Заполняется автоматически при создании комментария.
+     */
+    @Column(name = "createdat", updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    /**
+     * Пользователь, оставивший комментарий.
+     * Используется ленивая загрузка (FetchType.LAZY) для оптимизации.
+     * Поле обязательно для заполнения (nullable = false).
+     */
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ad_id")
+    /**
+     * Объявление, к которому относится комментарий.
+     * Используется ленивая загрузка (FetchType.LAZY) для оптимизации.
+     * Поле обязательно для заполнения (nullable = false).
+     */
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "ad_id", nullable = false)
     private Ad ad;
-
-    public Comment(Integer pk, String text, Integer createdAt, User user, Ad ad) {
-        this.pk = pk;
-        this.text = text;
-        this.createdAt = createdAt;
-        this.user = user;
-        this.ad = ad;
-    }
-
-    public Comment() {
-    }
-
-    public Integer getPk() {
-        return pk;
-    }
-
-    public void setPk(Integer pk) {
-        this.pk = pk;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Integer getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Integer createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Ad getAd() {
-        return ad;
-    }
-
-    public void setAd(Ad ad) {
-        this.ad = ad;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Comment)) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(pk, comment.pk) && Objects.equals(text, comment.text) && Objects.equals(createdAt, comment.createdAt) && Objects.equals(user, comment.user) && Objects.equals(ad, comment.ad);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pk, text, createdAt, user, ad);
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "pk=" + pk +
-                ", text='" + text + '\'' +
-                ", createdAt=" + createdAt +
-                ", user=" + user +
-                ", ad=" + ad +
-                '}';
-    }
 }
