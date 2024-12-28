@@ -57,7 +57,7 @@ public class UserDto {
      */
     @Schema(type = "string", description = "телефон пользователя")
     @NotBlank(message = "Телефон обязателен")
-    private String phone;
+    private Integer phone;
 
     /**
      * Роль пользователя.
@@ -74,4 +74,6 @@ public class UserDto {
     @Schema(type = "string", description = "ссылка на аватар пользователя")
     @NotBlank(message = "Ссылка на изображение обязательна")
     private String image;
+    private RoleDto role;
+
 }

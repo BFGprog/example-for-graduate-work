@@ -7,54 +7,37 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
-/**
- * Класс, представляющий сущность "Объявление".
- * Используется для хранения информации о товаре, размещенном на продажу.
- */
 @Entity
 @Table(name = "ad")
-@Data // Автоматически генерирует геттеры, сеттеры, toString, equals и hashCode
-@NoArgsConstructor // Конструктор без аргументов
-@AllArgsConstructor // Конструктор со всеми аргументами
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ad {
 
-    /**
-     * Уникальный идентификатор объявления (первичный ключ).
-     * Генерируется автоматически при добавлении записи в базу данных.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk;
 
-    /**
-     * Ссылка на изображение товара.
-     * Может быть длинным URL-адресом, поэтому используется тип TEXT.
-     */
     @Column(columnDefinition = "TEXT")
+    @NotNull(message = "Ссылка на изображение обязательна")
     private String image;
 
-    /**
-     * Цена товара.
-     * Не может быть отрицательной (валидация через @Min).
-     * Поле обязательно для заполнения (валидация через @NotNull).
-     */
     @Min(value = 0, message = "Цена не может быть отрицательной")
     @NotNull(message = "Цена обязательна")
     private Integer price;
 
-    /**
-     * Заголовок объявления.
-     * Может быть длинным, поэтому используется тип TEXT.
-     */
     @Column(columnDefinition = "TEXT")
+    @NotNull(message = "Заголовок обязателен")
     private String title;
 
-    /**
-     * Связь с пользователем, который создал объявление.
-     * Используется ленивая загрузка (FetchType.LAZY) для оптимизации.
-     * Поле обязательно для заполнения (nullable = false).
-     */
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import ru.skypro.homework.dto.RoleDto;
 
 import javax.management.relation.Role;
 import javax.persistence.*;
@@ -62,7 +63,7 @@ public class User {
      */
     @Column(length = 20)
     @NotBlank(message = "Телефон обязателен")
-    private String phone;
+    private Integer phone;
 
     /**
      * Роль пользователя (например, USER, ADMIN).
@@ -91,5 +92,14 @@ public class User {
     private String password;
     public interface UserRepository extends JpaRepository<User, Integer> {
         Optional<User> findByEmail(String email);
+    }
+    private RoleDto roleDto;
+
+    public RoleDto getRoleDto() {
+        return roleDto;
+    }
+
+    public void setRoleDto(RoleDto roleDto) {
+        this.roleDto = roleDto;
     }
 }

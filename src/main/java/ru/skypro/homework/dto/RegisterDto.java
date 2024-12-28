@@ -63,7 +63,7 @@ public class RegisterDto {
     @Schema(type = "string", description = "телефон пользователя", pattern = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")
     @Pattern(regexp = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}", message = "Номер телефона должен соответствовать формату +7 (XXX) XXX-XX-XX")
     @NotBlank(message = "Телефон обязателен")
-    private String phone;
+    private Integer phone;
 
     /**
      * Роль пользователя.
