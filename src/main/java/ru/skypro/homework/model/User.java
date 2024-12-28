@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import ru.skypro.homework.dto.RoleDto;
 
-import javax.management.relation.Role;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -70,7 +70,7 @@ public class User {
      */
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Роль обязательна")
-    private Role role;
+    private RoleDto roleDto;
 
     /**
      * Ссылка на аватар пользователя.
@@ -89,7 +89,5 @@ public class User {
     @Column(nullable = false)
     @NotNull(message = "Пароль обязателен")
     private String password;
-    public interface UserRepository extends JpaRepository<User, Integer> {
-        Optional<User> findByEmail(String email);
-    }
+
 }

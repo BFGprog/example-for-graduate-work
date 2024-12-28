@@ -34,13 +34,6 @@ public class Comment {
     @Column(columnDefinition = "TEXT")
     private String text;
 
-    /**
-     * Время создания комментария.
-     * Заполняется автоматически при создании комментария.
-     */
-    @Column(name = "createdat", updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 
     /**
      * Пользователь, оставивший комментарий.

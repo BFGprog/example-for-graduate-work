@@ -9,7 +9,7 @@ import java.io.IOException;
 public interface UsersService {
     public String setPassword(NewPasswordDto newPasswordDto);
     public UserDto getUser();
-    public String updateUser();
+    public String updateUser(UserDto userDto);
     public String uploadImage(MultipartFile file) throws IOException;
 
 };

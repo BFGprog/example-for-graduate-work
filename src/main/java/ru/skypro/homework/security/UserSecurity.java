@@ -5,7 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.skypro.homework.model.User;
-import ru.skypro.homework.model.RoleDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,7 +15,7 @@ public class UserSecurity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + (user.getRoleDto() != null ? user.getRoleDto().name() : "USER")));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRoleDto().name()));
     }
 
     @Override

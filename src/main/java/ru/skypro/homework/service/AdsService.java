@@ -7,19 +7,17 @@ import ru.skypro.homework.dto.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ExtendedAdDto;
 
 public interface AdsService {
-    public Ads getAllAds();
+    Ads getAllAds();
 
-    public Ads addAds(MultipartFile image, CreateOrUpdateAdDto ad, Authentication authentication);
+    Ads addAds(MultipartFile image, CreateOrUpdateAdDto ad, Authentication authentication);
 
-    public Ads getUserAds();
+    Ads getUserAds(Authentication authentication);
 
-    public void removeAd(Integer id);
+    void removeAd(Integer id, Authentication authentication);
 
     ExtendedAdDto getAdById(Integer id);
 
-    Ads updateAdById(Integer id, CreateOrUpdateAdDto ad);
+    Ads updateAdById(Integer id, CreateOrUpdateAdDto ad, Authentication authentication);
 
-    String updateImageAd(Integer id, CreateOrUpdateAdDto ad);
+    String updateImageAd(Integer id, MultipartFile image, Authentication authentication);
 }
-
-
