@@ -18,5 +18,5 @@ public class CreateOrUpdateAdDto {
 
     @Min(value = 0, message = "Цена не может быть отрицательной")
     @NotNull(message = "Цена обязательна")
-    private Integer price;
+    private String price;
 }

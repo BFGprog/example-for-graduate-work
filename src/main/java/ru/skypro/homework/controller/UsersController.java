@@ -32,12 +32,6 @@ public class UsersController {
         return usersService.getUser();
 
     }
-    @PatchMapping("/me")
-    @Operation(summary = "Обновление информации об авторизованном пользователе")
-    public String updateUser() {
-        return usersService.updateUser();
-
-    }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Обновление аватара авторизованного пользователя")

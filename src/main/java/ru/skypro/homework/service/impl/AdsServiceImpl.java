@@ -120,7 +120,7 @@ public class AdsServiceImpl implements AdsService {
 
     private ExtendedAdDto mapToExtendedAdDto(Ad ad) {
         if (ad == null) {
-            throw new IllegalArgumentException("Объявление не может быть null");
+            throw new IllegalArgumentException("Объявление не может быть пу");
         }
 
         User user = ad.getUser();

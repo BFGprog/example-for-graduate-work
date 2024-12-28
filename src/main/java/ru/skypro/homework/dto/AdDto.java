@@ -50,7 +50,7 @@ public class AdDto {
     @Schema(type = "integer", format = "int32", description = "цена объявления")
     @Min(value = 0, message = "Цена не может быть отрицательной")
     @NotNull(message = "Цена обязательна")
-    private Integer price;
+    private String price;
 
     /**
      * Заголовок объявления.

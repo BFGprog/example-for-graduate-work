@@ -34,7 +34,7 @@ public class ExtendedAdDto {
     private String phone;
 
     @Min(value = 0, message = "Цена не может быть отрицательной")
-    private Integer price;
+    private String price;
 
     @NotBlank(message = "Заголовок обязателен")
     private String title;

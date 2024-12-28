@@ -25,7 +25,7 @@ public class Ads {
     public static class AdDto {
         private Integer id;
         private String title;
-        private Integer price;
+        private String price;
         private String image;
         private Integer author;
     }
