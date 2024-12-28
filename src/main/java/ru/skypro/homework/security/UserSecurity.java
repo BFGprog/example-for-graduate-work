@@ -1,30 +1,22 @@
 package ru.skypro.homework.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.RoleDto;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
+@RequiredArgsConstructor
 public class UserSecurity implements UserDetails {
     private final User user;
 
-    public UserSecurity(User user) {
-        this.user = user;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Optional.ofNullable(user)
-                .map(User::getRoleDto)
-                .map(role -> "ROLE_" + role)
-                .map(SimpleGrantedAuthority::new)
-                .map(List::of)
-                .orElse(Collections.emptyList());
+        return List.of(new SimpleGrantedAuthority("ROLE_" + (user.getRoleDto() != null ? user.getRoleDto().name() : "USER")));
     }
 
     @Override

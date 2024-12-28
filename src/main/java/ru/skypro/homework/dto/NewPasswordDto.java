@@ -1,55 +1,37 @@
 package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
+/**
+ * Класс, представляющий DTO для изменения пароля пользователя.
+ * Используется для передачи текущего и нового пароля.
+ */
+@Data
+@NoArgsConstructor
 public class NewPasswordDto {
-    @Schema(type = "string",
-            description = "текущий пароль",
-            minLength = 8,
-            maxLength = 16)
+
+    /**
+     * Текущий пароль пользователя.
+     * Должен содержать от 8 до 16 символов.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "текущий пароль", minLength = 8, maxLength = 16)
+    @Size(min = 8, max = 16, message = "Текущий пароль должен содержать от 8 до 16 символов")
+    @NotBlank(message = "Текущий пароль обязателен")
     private String currentPassword;
-    @Schema(type = "string",
-            description = "новый пароль",
-            minLength = 8,
-            maxLength = 16)
+
+    /**
+     * Новый пароль пользователя.
+     * Должен содержать от 8 до 16 символов.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "новый пароль", minLength = 8, maxLength = 16)
+    @Size(min = 8, max = 16, message = "Новый пароль должен содержать от 8 до 16 символов")
+    @NotBlank(message = "Новый пароль обязателен")
     private String newPassword;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof NewPasswordDto)) return false;
-        NewPasswordDto that = (NewPasswordDto) o;
-        return Objects.equals(currentPassword, that.currentPassword) && Objects.equals(newPassword, that.newPassword);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(currentPassword, newPassword);
-    }
-
-    @Override
-    public String toString() {
-        return "NewPassword{" +
-                "currentPassword='" + currentPassword + '\'' +
-                ", newPassword='" + newPassword + '\'' +
-                '}';
-    }
-
-    public String getCurrentPassword() {
-        return currentPassword;
-    }
-
-    public void setCurrentPassword(String currentPassword) {
-        this.currentPassword = currentPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
 }

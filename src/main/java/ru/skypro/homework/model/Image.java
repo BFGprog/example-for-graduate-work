@@ -1,58 +1,38 @@
 package ru.skypro.homework.model;
 
-import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+/**
+ * Класс, представляющий сущность "Изображение".
+ * Используется для хранения бинарных данных изображений.
+ */
 @Entity
-@Table(name="image")
+@Table(name = "image")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Image {
 
-
-    @SequenceGenerator(name = "generatorImageId", allocationSize = 1)
+    /**
+     * Уникальный идентификатор изображения (первичный ключ).
+     * Генерируется автоматически при добавлении записи в базу данных.
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "generatorImageId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Бинарные данные изображения.
+     * Используется тип LONGBLOB для хранения больших объектов.
+     * Поле обязательно для заполнения (валидация через @NotNull).
+     */
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    @NotNull(message = "Данные изображения обязательны")
     private byte[] data;
-
-
-    @Override
-    public String toString() {
-        return "Image{" +
-                "id=" + id +
-                ", data=" + Arrays.toString(data) +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Image image = (Image) o;
-        return Objects.equals(id, image.id) && Arrays.equals(data, image.data);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(id);
-        result = 31 * result + Arrays.hashCode(data);
-        return result;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
 }
