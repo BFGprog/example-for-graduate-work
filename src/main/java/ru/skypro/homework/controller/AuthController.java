@@ -23,24 +23,29 @@ public class AuthController {
 
     private final AuthService authService;
 
-
     @PostMapping("/login")
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+        log.info("Attempting to login user: {}", loginDto.getUsername());
         if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
+            log.info("User {} successfully logged in", loginDto.getUsername());
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            log.warn("Failed login attempt for user: {}", loginDto.getUsername());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверный логин или пароль");
         }
     }
 
     @PostMapping("/register")
     @Operation(summary = "Регистрация пользователя")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
+        log.info("Attempting to register user: {}", registerDto.getUsername());
         if (authService.register(registerDto)) {
+            log.info("User {} successfully registered", registerDto.getUsername());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            log.warn("Failed registration attempt for user: {}", registerDto.getUsername());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Пользователь с таким email уже существует");
         }
     }
 }

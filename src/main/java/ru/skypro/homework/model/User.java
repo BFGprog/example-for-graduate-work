@@ -3,18 +3,16 @@ package ru.skypro.homework.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import ru.skypro.homework.dto.RoleDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 
 /**
  * Класс, представляющий сущность "Пользователь".
- * Используется для хранения информации о пользователях системы.
+ * Используется для хранения информации о пользователях.
  */
 @Entity
 @Table(name = "users")
@@ -44,7 +42,7 @@ public class User {
      * Имя пользователя.
      * Поле обязательно для заполнения.
      */
-    @Column(length = 255)
+    @Column(length = 255, nullable = false)
     @NotBlank(message = "Имя обязательно")
     private String firstName;
 
@@ -52,7 +50,7 @@ public class User {
      * Фамилия пользователя.
      * Поле обязательно для заполнения.
      */
-    @Column(length = 255)
+    @Column(length = 255, nullable = false)
     @NotBlank(message = "Фамилия обязательна")
     private String lastName;
 
@@ -60,7 +58,7 @@ public class User {
      * Номер телефона пользователя.
      * Поле обязательно для заполнения.
      */
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     @NotBlank(message = "Телефон обязателен")
     private String phone;
 
@@ -69,6 +67,7 @@ public class User {
      * Поле обязательно для заполнения.
      */
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     @NotNull(message = "Роль обязательна")
     private RoleDto roleDto;
 
@@ -77,7 +76,7 @@ public class User {
      * Поле обязательно для заполнения.
      */
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "image_id")
+    @JoinColumn(name = "image_id", nullable = false)
     @NotNull(message = "Изображение обязательно")
     private Image image;
 
@@ -89,5 +88,4 @@ public class User {
     @Column(nullable = false)
     @NotNull(message = "Пароль обязателен")
     private String password;
-
 }
