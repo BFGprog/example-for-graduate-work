@@ -1,104 +1,63 @@
 package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Objects;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+/**
+ * Класс, представляющий DTO для сущности "Объявление".
+ * Используется для передачи данных об объявлении между слоями приложения.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AdDto {
-    @Schema(type = "integer",
-            format = "int32",
-            description = "id автора объявления")
-    Integer author;
 
-    @Schema(type = "string",
-            description = "ссылка на картинку объявления")
-    String image;
-    @Schema(type = "integer",
-            format = "int32",
-            description = "id объявления")
-    Integer pk;
+    /**
+     * ID автора объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "integer", format = "int32", description = "id автора объявления")
+    @NotNull(message = "ID автора обязательно")
+    private Integer author;
 
-    @Schema(type = "integer",
-            format = "int32",
-            description = "id объявления")
-    Integer price;
+    /**
+     * Ссылка на изображение объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "ссылка на картинку объявления")
+    @NotBlank(message = "Ссылка на изображение обязательна")
+    private String image;
 
-    @Schema(type = "string",
-            description = "заголовок объявления")
-    String title;
+    /**
+     * ID объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "integer", format = "int32", description = "id объявления")
+    @NotNull(message = "ID объявления обязательно")
+    private Integer id;
 
-    public AdDto(Integer author, String image, Integer pk, Integer price, String title) {
-        this.author = author;
-        this.image = image;
-        this.pk = pk;
-        this.price = price;
-        this.title = title;
-    }
+    /**
+     * Цена объявления.
+     * Поле обязательно для заполнения и не может быть отрицательным.
+     */
+    @Schema(type = "integer", format = "int32", description = "цена объявления")
+    @Min(value = 0, message = "Цена не может быть отрицательной")
+    @NotNull(message = "Цена обязательна")
+    private Integer price;
 
-    public AdDto() {
-    }
-
-    public Integer getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Integer author) {
-        this.author = author;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public Integer getPk() {
-        return pk;
-    }
-
-    public void setPk(Integer pk) {
-        this.pk = pk;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AdDto)) return false;
-        AdDto adDto = (AdDto) o;
-        return Objects.equals(author, adDto.author) && Objects.equals(image, adDto.image) && Objects.equals(pk, adDto.pk) && Objects.equals(price, adDto.price) && Objects.equals(title, adDto.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(author, image, pk, price, title);
-    }
-
-    @Override
-    public String toString() {
-        return "Ad{" +
-                "author=" + author +
-                ", image=" + image +
-                ", pk=" + pk +
-                ", price=" + price +
-                ", title=" + title +
-                '}';
-    }
+    /**
+     * Заголовок объявления.
+     * Поле обязательно для заполнения и не может быть длиннее 255 символов.
+     */
+    @Schema(type = "string", description = "заголовок объявления")
+    @Size(max = 255, message = "Заголовок не может быть длиннее 255 символов")
+    @NotBlank(message = "Заголовок обязателен")
+    private String title;
 }

@@ -1,44 +1,92 @@
 package ru.skypro.homework.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+/**
+ * Класс, представляющий DTO для расширенных данных об объявлении.
+ * Используется для передачи данных об объявлении и информации об авторе.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExtendedAdDto {
-    @Schema(type = "integer",
-            description = "id объявления")
-    public Integer pk;
-    @Schema(type = "string",
-            description = "имя автора объявления")
-    public String authorFirstName;
 
-    @Schema(type = "string",
-            description = "фамилия автора объявления")
-    public String authorLastName;
+    /**
+     * ID объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "integer", description = "id объявления")
+    @NotNull(message = "ID объявления обязательно")
+    private Integer pk;
 
-    @Schema(type = "string",
-            description = " описание объявления ")
-    public String description;
+    /**
+     * Имя автора объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "имя автора объявления")
+    @NotBlank(message = "Имя автора обязательно")
+    private String authorFirstName;
 
+    /**
+     * Фамилия автора объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "фамилия автора объявления")
+    @NotBlank(message = "Фамилия автора обязательна")
+    private String authorLastName;
 
+    /**
+     * Описание объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "описание объявления")
+    @NotBlank(message = "Описание обязательно")
+    private String description;
 
-    @Schema(type = "string",
-            description = " логин автора объявления ")
-    public String email;
+    /**
+     * Логин автора объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "логин автора объявления")
+    @NotBlank(message = "Логин автора обязателен")
+    private String email;
 
-    @Schema(type = "string",
-            description = " ссылка на картинку объявления ")
-    public String image;
+    /**
+     * Ссылка на изображение объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "ссылка на картинку объявления")
+    @NotBlank(message = "Ссылка на изображение обязательна")
+    private String image;
 
-    @Schema(type = "string",
-            description = " телефон автора объявления ")
-    public String  phone;
+    /**
+     * Телефон автора объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "телефон автора объявления")
+    @NotBlank(message = "Телефон автора обязателен")
+    private String phone;
 
+    /**
+     * Цена объявления.
+     * Поле не может быть отрицательным.
+     */
+    @Schema(type = "integer", description = "цена объявления")
+    @Min(value = 0, message = "Цена не может быть отрицательной")
+    private Integer price;
 
-    @Schema(type = "integer",
-            description = "цена объявления")
-    public Integer price;
-
-    @Schema(type = "string",
-            description = "заголовок объявления ")
-    public String  title;
-
+    /**
+     * Заголовок объявления.
+     * Поле обязательно для заполнения.
+     */
+    @Schema(type = "string", description = "заголовок объявления")
+    @NotBlank(message = "Заголовок обязателен")
+    private String title;
 }
