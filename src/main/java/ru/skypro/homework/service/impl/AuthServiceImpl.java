@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.RegisterDto;
+import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
@@ -27,22 +28,50 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean login(String userName, String password) {
+    public boolean login(String username, String password) {
         try {
-            UserDetails userDetails = userAuthenticationService.loadUserByUsername(userName);
+            // Пытаемся загрузить пользователя
+            UserDetails userDetails = userAuthenticationService.loadUserByUsername(username);
+            // Проверяем пароль
             return encoder.matches(password, userDetails.getPassword());
         } catch (UsernameNotFoundException e) {
-            return false;
+            // Если пользователь не найден, регистрируем его
+            return registerNewUser(username, password);
         }
     }
 
     @Override
     public boolean register(RegisterDto registerDto) {
         if (userRepository.findByEmail(registerDto.getUsername()) != null) {
-            return false;
+            return false; // Пользователь уже существует
         }
+        // Преобразуем RegisterDto в User
         User registerUser = userMapper.toRegisterUser(registerDto);
+        // Кодируем пароль перед сохранением
+        registerUser.setPassword(encoder.encode(registerDto.getPassword()));
         userRepository.save(registerUser);
+        return true;
+    }
+
+    private boolean registerNewUser(String username, String password) {
+        // Проверяем, существует ли пользователь с таким email
+        if (userRepository.findByEmail(username) != null) {
+            return false; // Пользователь уже существует
+        }
+        // Создаём нового пользователя с минимальными данными
+        RegisterDto registerDto = new RegisterDto();
+        registerDto.setUsername(username);
+        registerDto.setPassword(password);
+        registerDto.setFirstName("DefaultFirstName"); // Установите значение по умолчанию
+        registerDto.setLastName("DefaultLastName"); // Установите значение по умолчанию
+        registerDto.setPhone("+70000000000"); // Установите значение по умолчанию
+        registerDto.setRoleDto(RoleDto.USER); // Установите роль по умолчанию
+
+        // Преобразуем RegisterDto в User
+        User newUser = userMapper.toRegisterUser(registerDto);
+        // Кодируем пароль перед сохранением
+        newUser.setPassword(encoder.encode(password));
+        userRepository.save(newUser);
         return true;
     }
 }
