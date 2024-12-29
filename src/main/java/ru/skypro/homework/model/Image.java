@@ -37,4 +37,8 @@ public class Image {
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] data;
+
+    public Long getId() {
+        return id;
+    }
 }
