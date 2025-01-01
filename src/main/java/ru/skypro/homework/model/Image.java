@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * Используется для хранения бинарных данных изображений.
  */
 @Entity
-@Table(name = "image")
+//@Table(name = "image")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

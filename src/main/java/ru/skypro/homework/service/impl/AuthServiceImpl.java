@@ -1,5 +1,7 @@
 package ru.skypro.homework.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -13,7 +15,7 @@ import ru.skypro.homework.service.AuthService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-
+    private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
     private UserAuthenticationService userAuthenticationService;
     private UserRepository userRepository;
     private final UserMapper userMapper;
@@ -38,13 +40,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean register(RegisterDto registerDto) {
-        if (userRepository.findByEmail(registerDto.getUsername()) != null) {
+
+        if (userRepository.findByEmail(registerDto.getUsername()).isPresent()) {
+            logger.warn("Registration attempt failed: User with email {} already exists", registerDto.getUsername());
             throw new IllegalArgumentException(registerDto.getUsername() + " Mail is already registered");
-        }
-        String encode = encoder.encode(registerDto.getPassword());
-        registerDto.setPassword(encode);
-        User registerUser = userMapper.toRegisterUser(registerDto);
-        userRepository.save(registerUser);
+            }
+        User users = userMapper.toUsers(registerDto);
+        users.setPassword(encoder.encode(registerDto.getPassword()));
+        userRepository.save(users);
         return true;
     }
 
