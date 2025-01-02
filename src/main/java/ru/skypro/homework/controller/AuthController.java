@@ -2,8 +2,6 @@ package ru.skypro.homework.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,35 +10,68 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skypro.homework.dto.LoginDto;
 import ru.skypro.homework.dto.RegisterDto;
+import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.service.AuthService;
 
-@Slf4j
+import javax.validation.Valid;
+
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @Tag(name = "Авторизация и регистрация пользователя")
-@RequiredArgsConstructor
 public class AuthController {
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     private final AuthService authService;
 
+    @PostMapping("/users")
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserDto userDto) {
+        try {
+            RegisterDto registerDto = new RegisterDto();
+            registerDto.setUsername(userDto.getEmail());
+            registerDto.setPassword("defaultPassword");
+            registerDto.setFirstName(userDto.getFirstName());
+            registerDto.setLastName(userDto.getLastName());
+            registerDto.setPhone(userDto.getPhone());
+            registerDto.setRoleDto(userDto.getRoleDto());
+
+            if (authService.register(registerDto)) {
+                return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь успешно создан");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Пользователь с таким email уже существует");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при создании пользователя: " + e.getMessage());
+        }
+    }
 
     @PostMapping("/login")
     @Operation(summary = "Авторизация пользователя")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-        if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
+        try {
+            if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
+                return ResponseEntity.ok().body("Авторизация успешна");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверный логин или пароль");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при авторизации: " + e.getMessage());
         }
     }
 
     @PostMapping("/register")
     @Operation(summary = "Регистрация пользователя")
-    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
-        if (authService.register(registerDto)) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
+        try {
+            if (authService.register(registerDto)) {
+                return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь успешно зарегистрирован");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Пользователь с таким email уже существует");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при регистрации: " + e.getMessage());
         }
     }
 }

@@ -7,26 +7,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
-import ru.skypro.homework.exception.UserNotFoundException;
 import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UsersService;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 @Service
 public class UsersServiceImpl implements UsersService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
 
-    public UsersServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UsersServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.imageService = imageService;
     }
 
     @Override
@@ -36,12 +36,12 @@ public class UsersServiceImpl implements UsersService {
         String email = authentication.getName();
 
         // Находим пользователя по email
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty()) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
             return "Пользователь не найден";
         }
 
-        User user = userOptional.get();
+        User user = optionalUser.get();
 
         // Проверяем, совпадает ли текущий пароль
         if (!passwordEncoder.matches(newPasswordDto.getCurrentPassword(), user.getPassword())) {
@@ -62,23 +62,15 @@ public class UsersServiceImpl implements UsersService {
         String email = authentication.getName();
 
         // Находим пользователя по email
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty()) {
-            throw new UserNotFoundException("Пользователь не найден");
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("Пользователь не найден");
         }
 
-        User user = userOptional.get();
+        User user = optionalUser.get();
 
         // Преобразуем User в UserDto
-        return new UserDto(
-                user.getId(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getPhone(),
-                user.getRoleDto(),
-                user.getImage() != null ? user.getImage().getPath().toString() : null
-        );
+        return toUserDto(user);
     }
 
     @Override
@@ -88,12 +80,12 @@ public class UsersServiceImpl implements UsersService {
         String email = authentication.getName();
 
         // Находим пользователя по email
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty()) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
             return "Пользователь не найден";
         }
 
-        User user = userOptional.get();
+        User user = optionalUser.get();
 
         // Обновляем данные пользователя
         user.setFirstName(userDto.getFirstName());
@@ -112,40 +104,37 @@ public class UsersServiceImpl implements UsersService {
         String email = authentication.getName();
 
         // Находим пользователя по email
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty()) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
             return "Пользователь не найден";
         }
 
-        User user = userOptional.get();
+        User user = optionalUser.get();
 
-        // Сохраняем файл на сервере
-        String uploadDir = "uploads/";
-        Path uploadPath = Paths.get(uploadDir);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
+        // Загружаем изображение через ImageService
+        Image image = imageService.uploadImage(file);
 
-        // Удаляем старое изображение, если оно есть
-        if (user.getImage() != null && user.getImage().getPath() != null) {
-            Path oldFilePath = Paths.get(user.getImage().getPath());
-            if (Files.exists(oldFilePath)) {
-                Files.delete(oldFilePath);
-            }
-        }
-
-        // Сохраняем новое изображение
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        Path filePath = uploadPath.resolve(fileName);
-        Files.copy(file.getInputStream(), filePath);
-
-        // Обновляем ссылку на изображение у пользователя
-        if (user.getImage() == null) {
-            user.setImage(new Image());
-        }
-        user.getImage().setPath(filePath.toString());
+        // Обновляем изображение у пользователя
+        user.setImage(image);
         userRepository.save(user);
 
         return "Изображение успешно загружено";
+    }
+
+    private UserDto toUserDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setPhone(user.getPhone());
+        userDto.setRoleDto(user.getRoleDto());
+
+        // Устанавливаем URL изображения, если оно есть
+        if (user.getImage() != null) {
+            userDto.setImage(user.getImage().getPath()); // Используем getPath() вместо getUrl()
+        }
+
+        return userDto;
     }
 }
