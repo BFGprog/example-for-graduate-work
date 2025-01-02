@@ -3,10 +3,8 @@ package ru.skypro.homework.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * Класс, представляющий сущность "Комментарий".
@@ -31,16 +29,22 @@ public class Comment {
      * Текст комментария.
      * Может быть длинным, поэтому используется тип TEXT.
      */
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String text;
 
+    /**
+     * Дата и время создания комментария.
+     * Хранится в формате Unix-времени (миллисекунды с 01.01.1970).
+     */
+    @Column(name = "created_at", nullable = false)
+    private Long createdAt;
 
     /**
      * Пользователь, оставивший комментарий.
      * Используется ленивая загрузка (FetchType.LAZY) для оптимизации.
      * Поле обязательно для заполнения (nullable = false).
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -49,7 +53,7 @@ public class Comment {
      * Используется ленивая загрузка (FetchType.LAZY) для оптимизации.
      * Поле обязательно для заполнения (nullable = false).
      */
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_id", nullable = false)
     private Ad ad;
 }
