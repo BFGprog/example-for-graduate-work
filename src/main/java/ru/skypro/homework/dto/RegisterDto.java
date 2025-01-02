@@ -28,5 +28,5 @@ public class RegisterDto {
     private String phone;
 
     @NotNull(message = "Роль обязательна")
-    private RoleDto roleDto;
+    private RoleDto role;
 }

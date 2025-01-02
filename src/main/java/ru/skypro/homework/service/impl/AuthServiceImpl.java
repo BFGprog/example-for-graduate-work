@@ -1,5 +1,7 @@
 package ru.skypro.homework.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,8 +17,11 @@ import ru.skypro.homework.service.AuthService;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+
     private final UserAuthenticationService userAuthenticationService;
     private final UserRepository userRepository;
+
     private final UserMapper userMapper;
     private final PasswordEncoder encoder;
 
@@ -42,14 +47,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean register(RegisterDto registerDto) {
-        if (userRepository.findByEmail(registerDto.getUsername()) != null) {
-            return false; // Пользователь уже существует
-        }
-        // Преобразуем RegisterDto в User
-        User registerUser = userMapper.toRegisterUser(registerDto);
-        // Кодируем пароль перед сохранением
-        registerUser.setPassword(encoder.encode(registerDto.getPassword()));
-        userRepository.save(registerUser);
+
+        if (userRepository.findByEmail(registerDto.getUsername()).isPresent()) {
+            logger.warn("Registration attempt failed: User with email {} already exists", registerDto.getUsername());
+            throw new IllegalArgumentException(registerDto.getUsername() + " Mail is already registered");
+            }
+        User users = userMapper.toUsers(registerDto);
+        users.setPassword(encoder.encode(registerDto.getPassword()));
+        userRepository.save(users);
+
         return true;
     }
 

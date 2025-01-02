@@ -20,25 +20,28 @@ public class UserMapper {
         return userDto;
     }
 
-    public User toUser(UserDto userDto) {
-        User user=new User();
-        user.setId(userDto.getId());
-        user.setEmail(userDto.getEmail());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setPhone(userDto.getPhone());
-        user.setRoleDto(userDto.getRoleDto());
-        return user;
-    }
+    public User toUsers(RegisterDto registerDto) {
+        if (registerDto == null) {
+            return null;
+        }
+        User users = new User();
+        users.setEmail(registerDto.getUsername());
+        users.setPassword(registerDto.getPassword());
+        users.setFirstName(registerDto.getFirstName());
+        users.setLastName(registerDto.getLastName());
+        users.setPhone(registerDto.getPhone());
+        users.setRoleDto(registerDto.getRole());
 
-    public User toRegisterUser(RegisterDto registerDTO) {
-        User user = new User();
-        user.setEmail(registerDTO.getUsername());
-        user.setPassword(registerDTO.getPassword());
-        user.setFirstName(registerDTO.getFirstName());
-        user.setLastName(registerDTO.getLastName());
-        user.setPhone(registerDTO.getPhone());
-        user.setRoleDto(registerDTO.getRoleDto());
-        return user;
+        return users;
     }
+//    public User toRegisterUser(RegisterDto registerDTO) {
+//        User user = new User();
+//        user.setEmail(registerDTO.getUsername());
+//        user.setPassword(registerDTO.getPassword());
+//        user.setFirstName(registerDTO.getFirstName());
+//        user.setLastName(registerDTO.getLastName());
+//        user.setPhone(registerDTO.getPhone());
+//        user.setRoleDto(registerDTO.getRole());
+//        return user;
+//    }
 }

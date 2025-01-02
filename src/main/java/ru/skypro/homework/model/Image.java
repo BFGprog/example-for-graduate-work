@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "image")
+//@Table(name = "image")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
