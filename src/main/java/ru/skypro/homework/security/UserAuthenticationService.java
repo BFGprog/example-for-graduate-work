@@ -34,6 +34,7 @@ public class UserAuthenticationService implements UserDetailsService {
                     log.warn("Пользователь не найден: {}", username);
                     return new UsernameNotFoundException("Пользователь не найден: " + username);
                 });
+        log.info("Успешная аутентификации пользователя: {}", username);
         return new UserSecurity(user);
     }
 }

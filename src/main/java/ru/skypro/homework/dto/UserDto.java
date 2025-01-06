@@ -36,7 +36,7 @@ public class UserDto {
 
     @Schema(type = "string", description = "роль пользователя", allowableValues = {"USER", "ADMIN"})
     @NotNull(message = "Роль обязательна")
-    private RoleDto roleDto;
+    private RoleDto role;
 
     @Schema(type = "string", description = "ссылка на аватар пользователя")
     private String image;

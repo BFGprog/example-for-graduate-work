@@ -1,5 +1,7 @@
 package ru.skypro.homework.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,9 +10,11 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.exception.UserNotFoundException;
+import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.UserContextService;
 import ru.skypro.homework.service.UsersService;
 
 import java.io.IOException;
@@ -21,12 +25,16 @@ import java.util.Optional;
 
 @Service
 public class UsersServiceImpl implements UsersService {
+    private static final Logger logger = LoggerFactory.getLogger(UsersServiceImpl.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UsersServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final UserContextService userContextService;
+    private final UserMapper mappers;
+    public UsersServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserContextService userContextService, UserMapper mappers) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userContextService = userContextService;
+        this.mappers = mappers;
     }
 
     @Override
@@ -57,28 +65,13 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UserDto getUser() {
-        // Получаем текущего аутентифицированного пользователя
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
+        User userFromDb = userContextService.getCurrentUserFromDb();
+        UserDto userDto = mappers.toDto(userFromDb);
 
-        // Находим пользователя по email
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty()) {
-            throw new UserNotFoundException("Пользователь не найден");
-        }
 
-        User user = userOptional.get();
+        logger.info("Получена информация из БД по ID: {}", userFromDb.getId());
+        return userDto;
 
-        // Преобразуем User в UserDto
-        return new UserDto(
-                user.getId(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getPhone(),
-                user.getRoleDto(),
-                user.getImage() != null ? user.getImage().getPath().toString() : null
-        );
     }
 
     @Override

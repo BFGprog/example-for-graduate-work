@@ -41,7 +41,7 @@ public class AdDto {
      */
     @Schema(type = "integer", format = "int32", description = "id объявления")
     @NotNull(message = "ID объявления обязательно")
-    private Integer id;
+    private Integer pk;
 
     /**
      * Цена объявления.
