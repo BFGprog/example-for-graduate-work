@@ -130,7 +130,7 @@ public class UsersServiceImpl implements UsersService {
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setPhone(user.getPhone());
-        userDto.setRoleDto(user.getRoleDto());
+        userDto.setRoleDto(user.getRole());
 
         // Устанавливаем URL изображения, если оно есть
         if (user.getImage() != null) {

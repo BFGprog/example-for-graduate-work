@@ -34,14 +34,14 @@ public class UserMapper {
 
         return users;
     }
-//    public User toRegisterUser(RegisterDto registerDTO) {
-//        User user = new User();
-//        user.setEmail(registerDTO.getUsername());
-//        user.setPassword(registerDTO.getPassword());
-//        user.setFirstName(registerDTO.getFirstName());
-//        user.setLastName(registerDTO.getLastName());
-//        user.setPhone(registerDTO.getPhone());
-//        user.setRoleDto(registerDTO.getRole());
-//        return user;
-//    }
+    public User toRegisterUser(RegisterDto registerDTO) {
+        User user = new User();
+        user.setEmail(registerDTO.getUsername());
+        user.setPassword(registerDTO.getPassword());
+        user.setFirstName(registerDTO.getFirstName());
+        user.setLastName(registerDTO.getLastName());
+        user.setPhone(registerDTO.getPhone());
+        user.setRole(registerDTO.getRole());
+        return user;
+    }
 }
