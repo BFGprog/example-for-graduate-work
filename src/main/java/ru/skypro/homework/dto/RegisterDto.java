@@ -71,5 +71,5 @@ public class RegisterDto {
      */
     @Schema(type = "string", description = "роль пользователя", allowableValues = {"USER", "ADMIN"})
     @NotNull(message = "Роль обязательна")
-    private RoleDto roleDto;
+    private RoleDto role;
 }

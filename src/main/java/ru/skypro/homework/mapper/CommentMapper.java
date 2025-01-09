@@ -14,10 +14,10 @@ public class CommentMapper {
 
     public CommentDto toDto(Comment comment) {
         CommentDto commentDto = new CommentDto();
-        commentDto.setPk(comment.getPk());
+        commentDto.setPk(comment.getId());
         commentDto.setText(comment.getText());
         commentDto.setAuthor(comment.getUser().getId());
-        commentDto.setCreatedAt(comment.getCreatedAt());
+
 
 
         return commentDto;

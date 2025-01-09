@@ -2,7 +2,6 @@ package ru.skypro.homework.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -14,16 +13,19 @@ import ru.skypro.homework.service.AdsService;
 
 @RestController
 @RequestMapping("/ads")
-@Tag(name = "Обьявления")
+@Tag(name = "Объявления")
 public class AdsController {
-    @Autowired
-    private AdsService adsService;
+
+    private final AdsService adsService;
+
+    public AdsController(AdsService adsService) {
+        this.adsService = adsService;
+    }
 
     @GetMapping
     @Operation(summary = "Получение всех объявлений")
     public Ads getAllAds() {
         return adsService.getAllAds();
-
     }
 
     @PostMapping
@@ -35,46 +37,41 @@ public class AdsController {
         return adsService.addAds(image, ad, authentication);
     }
 
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Получение объявлений авторизованного пользователя")
+    public Ads getUserAds(Authentication authentication) {
+        return adsService.getUserAds(authentication);
+    }
+
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
+    @Operation(summary = "Удаление объявления")
+    public void removeAd(@PathVariable Integer id, Authentication authentication) {
+        adsService.removeAd(id, authentication);
+    }
+
     @GetMapping("{id}")
     @Operation(summary = "Получение информации об объявлении")
     public ExtendedAdDto getAdById(@PathVariable Integer id) {
         return adsService.getAdById(id);
-
-    }
-
-    @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ADMIN') or @adServiceImpl.findAdById(id).author.email.equals(authentication.name)")
-    @Operation(summary = "Удаление объявления")
-    public String removeAd(@PathVariable Integer id) {
-        adsService.removeAd(id);
-        return "Объявление удалено";
-
     }
 
     @PatchMapping("{id}")
-    @PreAuthorize("hasRole('ADMIN') or adServiceImpl.findAdById(id).author.email.equals(authentication.name)")
+    @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
     @Operation(summary = "Обновление информации об объявлении")
-    public String updateAdById(@PathVariable Integer id,
-                               @RequestBody CreateOrUpdateAdDto ad) {
-        adsService.updateAdById(id, ad);
-        return "Объявление обновлено";
-
+    public Ads updateAdById(@PathVariable Integer id,
+                            @RequestBody CreateOrUpdateAdDto ad,
+                            Authentication authentication) {
+        return adsService.updateAdById(id, ad, authentication);
     }
-    @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
-    @Operation(summary = "Получение объявлений авторизованного пользователя")
-    public Ads getUserAds() {
-        return adsService.getUserAds();
 
-    }
     @PatchMapping("{id}/image")
-    @PreAuthorize("hasRole('ADMIN') or adServiceImpl.findAdById(id).author.email.equals(authentication.name)")
+    @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
     @Operation(summary = "Обновление картинки объявления")
     public String updateImageAd(@PathVariable Integer id,
-                               @RequestBody CreateOrUpdateAdDto ad) {
-        adsService.updateImageAd(id, ad);
-        return "Картинка обновлена";
-
+                                @RequestParam("image") MultipartFile image,
+                                Authentication authentication) {
+        return adsService.updateImageAd(id, image, authentication);
     }
-
 }

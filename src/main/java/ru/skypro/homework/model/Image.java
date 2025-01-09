@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * Используется для хранения бинарных данных изображений.
  */
 @Entity
-@Table(name = "image")
+//@Table(name = "image")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,4 +35,11 @@ public class Image {
     @Column(columnDefinition = "LONGBLOB")
     @NotNull(message = "Данные изображения обязательны")
     private byte[] data;
+
+    public void setPath(String string) {
+    }
+
+    public String getPath() {
+        return null;
+    }
 }

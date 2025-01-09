@@ -16,29 +16,32 @@ public class UserMapper {
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setPhone(user.getPhone());
-        userDto.setRole(user.getRoleDto());
+        userDto.setRoleDto(user.getRole());
         return userDto;
     }
 
-    public User toUser(UserDto userDto) {
-        User user=new User();
-        user.setId(userDto.getId());
-        user.setEmail(userDto.getEmail());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setPhone(userDto.getPhone());
-        user.setRoleDto(userDto.getRole());
-        return user;
-    }
+    public User toUsers(RegisterDto registerDto) {
+        if (registerDto == null) {
+            return null;
+        }
+        User users = new User();
+        users.setEmail(registerDto.getUsername());
+        users.setPassword(registerDto.getPassword());
+        users.setFirstName(registerDto.getFirstName());
+        users.setLastName(registerDto.getLastName());
+        users.setPhone(registerDto.getPhone());
+        users.setRole(registerDto.getRole());
 
-    public User toRegisterUser(RegisterDto registerDTO) {
-        User user = new User();
-        user.setEmail(registerDTO.getUsername());
-        user.setPassword(registerDTO.getPassword());
-        user.setFirstName(registerDTO.getFirstName());
-        user.setLastName(registerDTO.getLastName());
-        user.setPhone(registerDTO.getPhone());
-        user.setRoleDto(registerDTO.getRoleDto());
-        return user;
+        return users;
     }
+//    public User toRegisterUser(RegisterDto registerDTO) {
+//        User user = new User();
+//        user.setEmail(registerDTO.getUsername());
+//        user.setPassword(registerDTO.getPassword());
+//        user.setFirstName(registerDTO.getFirstName());
+//        user.setLastName(registerDTO.getLastName());
+//        user.setPhone(registerDTO.getPhone());
+//        user.setRoleDto(registerDTO.getRole());
+//        return user;
+//    }
 }
