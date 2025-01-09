@@ -50,7 +50,7 @@ public class AuthController {
             registerDto.setFirstName(userDto.getFirstName());
             registerDto.setLastName(userDto.getLastName());
             registerDto.setPhone(userDto.getPhone());
-            registerDto.setRoleDto(userDto.getRoleDto());
+            registerDto.setRole(userDto.getRoleDto());
 
             if (authService.register(registerDto)) {
                 return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь успешно создан");

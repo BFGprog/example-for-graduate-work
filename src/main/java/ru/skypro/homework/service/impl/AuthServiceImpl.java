@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
         registerDto.setFirstName("DefaultFirstName"); // Установите значение по умолчанию
         registerDto.setLastName("DefaultLastName"); // Установите значение по умолчанию
         registerDto.setPhone("+70000000000"); // Установите значение по умолчанию
-        registerDto.setRoleDto(RoleDto.USER); // Установите роль по умолчанию
+        registerDto.setRole(RoleDto.USER); // Установите роль по умолчанию
 
         // Преобразуем RegisterDto в User
         User newUser = userMapper.toRegisterUser(registerDto);
