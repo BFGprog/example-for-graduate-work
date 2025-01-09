@@ -70,7 +70,7 @@ public class User {
      */
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Роль обязательна")
-    private RoleDto roleDto;
+    private RoleDto role;
 
     /**
      * Ссылка на аватар пользователя.

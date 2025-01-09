@@ -76,7 +76,7 @@ public class UsersServiceImpl implements UsersService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPhone(),
-                user.getRoleDto(),
+                user.getRole(),
                 user.getImage() != null ? user.getImage().getPath().toString() : null
         );
     }

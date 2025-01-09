@@ -16,7 +16,7 @@ public class UserMapper {
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setPhone(user.getPhone());
-        userDto.setRoleDto(user.getRoleDto());
+        userDto.setRoleDto(user.getRole());
         return userDto;
     }
 
@@ -30,7 +30,7 @@ public class UserMapper {
         users.setFirstName(registerDto.getFirstName());
         users.setLastName(registerDto.getLastName());
         users.setPhone(registerDto.getPhone());
-        users.setRoleDto(registerDto.getRole());
+        users.setRole(registerDto.getRole());
 
         return users;
     }
