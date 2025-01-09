@@ -7,10 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-/**
- * Класс, представляющий сущность "Изображение".
- * Используется для хранения бинарных данных изображений.
- */
 @Entity
 //@Table(name = "image")
 @Data
@@ -27,19 +23,22 @@ public class Image {
     private Long id;
 
     /**
-     * Бинарные данные изображения.
-     * Используется тип LONGBLOB для хранения больших объектов.
+     * Путь к изображению в файловой системе или URL.
      * Поле обязательно для заполнения (валидация через @NotNull).
+     */
+    @Column(nullable = false)
+    @NotNull(message = "Путь к изображению обязателен")
+    private String path;
+
+    /**
+     * Бинарные данные изображения (опционально).
+     * Используется тип LONGBLOB для хранения больших объектов.
      */
     @Lob
     @Column(columnDefinition = "LONGBLOB")
-    @NotNull(message = "Данные изображения обязательны")
     private byte[] data;
 
-    public void setPath(String string) {
-    }
-
-    public String getPath() {
-        return null;
+    public Long getId() {
+        return id;
     }
 }

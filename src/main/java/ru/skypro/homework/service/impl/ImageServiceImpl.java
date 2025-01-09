@@ -1,46 +1,56 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.model.Image;
 import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.service.ImageService;
 
-import javax.imageio.ImageIO;
-import javax.transaction.Transactional;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class ImageServiceImpl implements ImageService {
-    ImageRepository imageRepository;
+
+    private final ImageRepository imageRepository;
+    private final String uploadDir = "uploads/"; // Директория для сохранения изображений
 
     public ImageServiceImpl(ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
     }
 
     @Override
-    @Transactional
     public Image uploadImage(MultipartFile file) throws IOException {
-
-        try (InputStream is = file.getInputStream();
-             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(baos, 1024);
-        ) {
-            bis.transferTo(bos);
-
-            Image saveImage = new Image();
-            saveImage.setData(baos.toByteArray());
-
-            return imageRepository.save(saveImage);
+        // Создаем директорию, если она не существует
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
         }
+
+        // Генерируем уникальное имя файла
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path filePath = uploadPath.resolve(fileName);
+
+        // Сохраняем файл
+        Files.copy(file.getInputStream(), filePath);
+
+        // Создаем объект Image
+        Image image = new Image();
+        image.setPath(filePath.toString()); // Сохраняем путь к файлу
+
+        // Сохраняем в базу данных
+        return imageRepository.save(image);
     }
 
+    @Override
+    public byte[] getImage(Long imageId) throws IOException {
+        Image image = imageRepository.findById(imageId)
+                .orElseThrow(() -> new RuntimeException("Изображение не найдено"));
+
+        Path filePath = Paths.get(image.getPath());
+        return Files.readAllBytes(filePath);
+    }
 }
