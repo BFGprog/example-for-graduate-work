@@ -70,7 +70,9 @@ public class UsersServiceImpl implements UsersService {
         User user = optionalUser.get();
 
         // Преобразуем User в UserDto
+
         return toUserDto(user);
+
     }
 
     @Override

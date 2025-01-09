@@ -70,7 +70,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     @NotNull(message = "Роль обязательна")
-    private RoleDto roleDto; // Используем enum вместо DTO
+
+    private RoleDto role;
+
 
     /**
      * Ссылка на аватар пользователя.
