@@ -18,7 +18,9 @@ import ru.skypro.homework.dto.LoginDto;
 import ru.skypro.homework.dto.RegisterDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.service.AuthService;
+
 import javax.validation.Valid;
+
 /**
  * Контроллер для управления авторизацией и регистрацией пользователей.
  * <p>
@@ -38,7 +40,6 @@ public class AuthController {
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
-
 
 
     @PostMapping("/users")
@@ -79,14 +80,11 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "Регистрация пользователя")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
-        try {
-            if (authService.register(registerDto)) {
-                return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь успешно зарегистрирован");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Пользователь с таким email уже существует");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при регистрации: " + e.getMessage());
+
+        if (authService.register(registerDto)) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь успешно зарегистрирован");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Пользователь с таким email уже существует");
         }
     }
 }
