@@ -79,7 +79,7 @@ public class User {
      * Поле обязательно для заполнения.
      */
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "image_id", nullable = false)
+    @JoinColumn(name = "image_id")
     @NotNull(message = "Изображение обязательно")
     private Image image;
 
