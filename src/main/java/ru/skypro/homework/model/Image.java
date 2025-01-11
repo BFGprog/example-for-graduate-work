@@ -30,12 +30,7 @@ public class Image {
     @NotNull(message = "Путь к изображению обязателен")
     private String path;
 
-    /**
-     * Бинарные данные изображения (опционально).
-     * Используется тип LONGBLOB для хранения больших объектов.
-     */
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
+
     private byte[] data;
 
     public Long getId() {

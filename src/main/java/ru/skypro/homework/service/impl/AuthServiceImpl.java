@@ -30,30 +30,36 @@ public class AuthServiceImpl implements AuthService {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.encoder = encoder;
+
     }
 
     @Override
     public boolean login(String username, String password) {
-        try {
-            // Пытаемся загрузить пользователя
-            UserDetails userDetails = userAuthenticationService.loadUserByUsername(username);
-            // Проверяем пароль
-            return encoder.matches(password, userDetails.getPassword());
-        } catch (UsernameNotFoundException e) {
-            // Если пользователь не найден, регистрируем его
-            return registerNewUser(username, password);
-        }
+        // Пытаемся загрузить пользователя
+        logger.warn("111 AuthServiceImpl login {}", username);
+
+        UserDetails userDetails = userAuthenticationService.loadUserByUsername(username);
+        // Проверяем пароль
+        logger.warn("112 AuthServiceImpl login {}", password);
+
+        boolean matches = encoder.matches(password, userDetails.getPassword());
+        logger.warn("113 AuthServiceImpl login {}", matches);
+
+        return matches;
+
     }
 
     @Override
     public boolean register(RegisterDto registerDto) {
-
+        logger.warn("111 AuthServiceImpl");
         if (userRepository.findByEmail(registerDto.getUsername()).isPresent()) {
             logger.warn("Registration attempt failed: User with email {} already exists", registerDto.getUsername());
             throw new IllegalArgumentException(registerDto.getUsername() + " Mail is already registered");
-            }
+        }
         User users = userMapper.toUsers(registerDto);
+
         users.setPassword(encoder.encode(registerDto.getPassword()));
+
         userRepository.save(users);
 
         return true;

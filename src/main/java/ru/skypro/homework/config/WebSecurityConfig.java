@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.security.UserAuthenticationService;
 
@@ -38,6 +39,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
+//    public DaoAuthenticationProvider authProvider() {
     public DaoAuthenticationProvider authProvider(PasswordEncoder passwordEncoder, UserAuthenticationService userAuthenticationService) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userAuthenticationService);
@@ -47,19 +49,32 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
-                .authorizeHttpRequests(
-                        authorization ->
-                                authorization
-                                        .mvcMatchers(AUTH_WHITELIST)
-                                        .permitAll()
-                                        .mvcMatchers("/ads/**", "/users/**")
-                                        .authenticated())
-                .cors()
+
+        return http.csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers(new AntPathRequestMatcher("/users/**"))
+                .hasRole("ADMIN")
                 .and()
-                .httpBasic(withDefaults());
-        return http.build();
+                .authorizeHttpRequests()
+                .requestMatchers(new AntPathRequestMatcher("/ads/**"))
+                .authenticated().and()
+                .httpBasic()
+                .and()
+                .build();
+
+//        http.csrf()
+//                .disable()
+//                .authorizeHttpRequests(
+//                        authorization ->
+//                                authorization
+//                                        .mvcMatchers(AUTH_WHITELIST)
+//                                        .permitAll()
+//                                        .mvcMatchers("/ads/**", "/users/**")
+//                                        .authenticated())
+//                .cors()
+//                .and()
+//                .httpBasic(withDefaults());
+//        return http.build();
     }
 
     @Bean
