@@ -1,5 +1,7 @@
 package ru.skypro.homework.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +11,11 @@ import ru.skypro.homework.service.ImageService;
 
 import java.io.IOException;
 
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/images")
 public class ImageController {
-
+    private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
     private final ImageService imageService;
 
     public ImageController(ImageService imageService) {
