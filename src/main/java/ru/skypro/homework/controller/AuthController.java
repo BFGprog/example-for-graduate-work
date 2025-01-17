@@ -30,10 +30,10 @@ import javax.validation.Valid;
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
-@Tag(name = "Авторизация и регистрация пользователя")
+
 public class AuthController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdsController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final AuthService authService;
 
 
@@ -64,6 +64,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Tag(name = "Авторизация")
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
         try {
@@ -78,6 +79,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Tag(name = "Регистрация")
     @Operation(summary = "Регистрация пользователя")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto) {
 
