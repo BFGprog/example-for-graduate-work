@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
 
+import java.util.Optional;
+
 /**
  * Сервис для аутентификации пользователей.
  * Реализует интерфейс UserDetailsService для интеграции с Spring Security.
@@ -29,11 +31,17 @@ public class UserAuthenticationService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("Попытка аутентификации пользователя: {}", username);
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> {
-                    log.warn("Пользователь не найден: {}", username);
-                    return new UsernameNotFoundException("Пользователь не найден: " + username);
-                });
-        return new UserSecurity(user);
+
+        Optional<User> user = userRepository.findByEmail(username);
+        return user.map(UserSecurity::new).orElseThrow(()->new UsernameNotFoundException("Invalid Username"));
+
+//        User user = userRepository.findByEmail(username)
+//                .orElseThrow(() -> {
+//                    log.warn("Пользователь не найден: {}", username);
+//                    return new UsernameNotFoundException("Пользователь не найден: " + username);
+//                });
+//        return new UserSecurity(user);
+
+
     }
 }

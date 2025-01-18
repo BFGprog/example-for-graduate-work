@@ -1,7 +1,9 @@
 package ru.skypro.homework.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UsersServiceImpl implements UsersService {
 
     private final UserRepository userRepository;
@@ -84,7 +87,7 @@ public class UsersServiceImpl implements UsersService {
         // Находим пользователя по email
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
-            return "Пользователь не найден";
+            throw new RuntimeException();
         }
 
         User user = optionalUser.get();
@@ -96,31 +99,42 @@ public class UsersServiceImpl implements UsersService {
 
         userRepository.save(user);
 
-        return "Данные пользователя успешно обновлены";
+        return null;
     }
 
     @Override
-    public String uploadImage(MultipartFile file) throws IOException {
-        // Получаем текущего аутентифицированного пользователя
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-
-        // Находим пользователя по email
-        Optional<User> optionalUser = userRepository.findByEmail(email);
-        if (optionalUser.isEmpty()) {
-            return "Пользователь не найден";
-        }
-
-        User user = optionalUser.get();
-
-        // Загружаем изображение через ImageService
-        Image image = imageService.uploadImage(file);
-
-        // Обновляем изображение у пользователя
-        user.setImage(image);
+    public void uploadImage(MultipartFile file) throws IOException {
+        log.info("@@@ uploadImage");
+        String username = objectAuthentication();
+        User user = (userRepository.findByEmail(username)).orElseThrow();
+        user.setImage(imageService.uploadImage(file));
+        log.info("uploadImage {}", user);
         userRepository.save(user);
+    }
+//        // Получаем текущего аутентифицированного пользователя
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String email = authentication.getName();
+//
+//        // Находим пользователя по email
+//        Optional<User> optionalUser = userRepository.findByEmail(email);
+//        if (optionalUser.isEmpty()) {
+//            throw new RuntimeException();
+//
+//
+//        User user = optionalUser.get();
+//
+//        // Загружаем изображение через ImageService
+//        Image image = imageService.uploadImage(file);
+//
+//        // Обновляем изображение у пользователя
+//        user.setImage(image);
+//        userRepository.save(user);
+//
+//    }
 
-        return "Изображение успешно загружено";
+    private String objectAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return ((UserDetails) authentication.getPrincipal()).getUsername();
     }
 
     private UserDto toUserDto(User user) {
@@ -130,11 +144,12 @@ public class UsersServiceImpl implements UsersService {
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setPhone(user.getPhone());
-        userDto.setRoleDto(user.getRole());
-
-        // Устанавливаем URL изображения, если оно есть
+        userDto.setRoleDto(user.getRoleDto());
+//        String imageId = (String) ((Optional<Image>) user.getImage().getId()).orElseGet(null);
+//        userDto.setImage("/image/avatar/" + user.getImage().getId());
+//        // Устанавливаем URL изображения, если оно есть
         if (user.getImage() != null) {
-            userDto.setImage(user.getImage().getPath()); // Используем getPath() вместо getUrl()
+            userDto.setImage("/image/" + user.getImage().getId()); // Используем getPath() вместо getUrl()
         }
 
         return userDto;

@@ -36,37 +36,17 @@ public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final AuthService authService;
 
-
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
 
-    @PostMapping("/users")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDto userDto) {
-        try {
-            RegisterDto registerDto = new RegisterDto();
-            registerDto.setUsername(userDto.getEmail());
-            registerDto.setPassword("defaultPassword");
-            registerDto.setFirstName(userDto.getFirstName());
-            registerDto.setLastName(userDto.getLastName());
-            registerDto.setPhone(userDto.getPhone());
-            registerDto.setRole(userDto.getRoleDto());
-
-            if (authService.register(registerDto)) {
-                return ResponseEntity.status(HttpStatus.CREATED).body("Пользователь успешно создан");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Пользователь с таким email уже существует");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при создании пользователя: " + e.getMessage());
-        }
-    }
 
     @PostMapping("/login")
     @Tag(name = "Авторизация")
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
+        log.info("1 login");
         try {
             if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
                 return ResponseEntity.ok().body("Авторизация успешна");

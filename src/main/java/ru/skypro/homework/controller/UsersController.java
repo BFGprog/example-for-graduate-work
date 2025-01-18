@@ -3,8 +3,12 @@ package ru.skypro.homework.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/users")
 @Tag(name = "Пользователи")
+@Slf4j
 public class UsersController {
     private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 
@@ -50,7 +55,8 @@ public class UsersController {
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Обновление аватара авторизованного пользователя")
-    public String updateUserImage(@RequestParam MultipartFile file) throws IOException {
-        return usersService.uploadImage(file);
+    public void updateUserImage(@RequestParam("image") MultipartFile image) throws IOException {
+        log.info("call updateUserImage ");
+        usersService.uploadImage(image);
     }
 }
