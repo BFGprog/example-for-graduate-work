@@ -32,49 +32,22 @@ public class WebSecurityConfig {
             "/register"
     };
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-//    public DaoAuthenticationProvider authProvider() {
-    public DaoAuthenticationProvider authProvider(PasswordEncoder passwordEncoder, UserAuthenticationService userAuthenticationService) {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userAuthenticationService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-        return authProvider;
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        return http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers(new AntPathRequestMatcher("/users/**"))
-                .hasRole("ADMIN")
+        http.csrf()
+                .disable()
+                .authorizeHttpRequests(
+                        authorization ->
+                                authorization
+                                        .mvcMatchers(AUTH_WHITELIST)
+                                        .permitAll()
+                                        .mvcMatchers("/ads/**", "/users/**")
+                                        .authenticated())
+                .cors()
                 .and()
-                .authorizeHttpRequests()
-                .requestMatchers(new AntPathRequestMatcher("/ads/**"))
-                .authenticated().and()
-                .httpBasic()
-                .and()
-                .build();
-
-//        http.csrf()
-//                .disable()
-//                .authorizeHttpRequests(
-//                        authorization ->
-//                                authorization
-//                                        .mvcMatchers(AUTH_WHITELIST)
-//                                        .permitAll()
-//                                        .mvcMatchers("/ads/**", "/users/**")
-//                                        .authenticated())
-//                .cors()
-//                .and()
-//                .httpBasic(withDefaults());
-//        return http.build();
+                .httpBasic(withDefaults());
+        return http.build();
     }
 
     @Bean

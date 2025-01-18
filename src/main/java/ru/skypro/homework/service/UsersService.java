@@ -10,6 +10,6 @@ public interface UsersService {
     public String setPassword(NewPasswordDto newPasswordDto);
     public UserDto getUser();
     public String updateUser(UserDto userDto);
-    public String uploadImage(MultipartFile file) throws IOException;
+    public void uploadImage(MultipartFile file) throws IOException;
 
 };

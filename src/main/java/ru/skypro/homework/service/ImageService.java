@@ -22,5 +22,7 @@ public interface ImageService {
      * @return Бинарные данные изображения.
      * @throws IOException Если произошла ошибка при чтении файла.
      */
-    byte[] getImage(Long imageId) throws IOException;
+    Image getImage(Long imageId) throws IOException;
+    byte[] getImageData(Long imageId) throws IOException;
+
 }

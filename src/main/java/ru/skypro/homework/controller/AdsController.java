@@ -11,6 +11,7 @@ import ru.skypro.homework.dto.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ExtendedAdDto;
 import ru.skypro.homework.service.AdsService;
 
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
 @Tag(name = "Объявления")
@@ -69,9 +70,9 @@ public class AdsController {
     @PatchMapping("{id}/image")
     @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
     @Operation(summary = "Обновление картинки объявления")
-    public String updateImageAd(@PathVariable Integer id,
+    public void updateImageAd(@PathVariable Integer id,
                                 @RequestParam("image") MultipartFile image,
                                 Authentication authentication) {
-        return adsService.updateImageAd(id, image, authentication);
+        adsService.updateImageAd(id, image, authentication);
     }
 }

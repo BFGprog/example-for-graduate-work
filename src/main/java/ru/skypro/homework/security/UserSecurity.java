@@ -28,7 +28,7 @@ public class UserSecurity implements UserDetails {
     public UserSecurity(User user) {
         this.username = user.getEmail();
         this.password = user.getPassword();
-        this.authorities = Stream.of(user.getRole().name())
+        this.authorities = Stream.of(user.getRoleDto().name())
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
         log.info("конструктор UserSecurity вызван ");

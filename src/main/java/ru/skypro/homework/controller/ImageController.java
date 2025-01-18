@@ -1,5 +1,8 @@
 package ru.skypro.homework.controller;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +12,9 @@ import ru.skypro.homework.service.ImageService;
 
 import java.io.IOException;
 
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
+@Slf4j
 @RequestMapping("/images")
 public class ImageController {
 
@@ -19,15 +24,22 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<Long> uploadImage(@RequestParam MultipartFile file) throws IOException {
-        Image image = imageService.uploadImage(file);
-        return ResponseEntity.ok(image.getId());
-    }
+//    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<Long> uploadImage(@RequestParam MultipartFile file) throws IOException {
+//        log.info("ImageController uploadImage");
+//        Image image = imageService.uploadImage(file);
+//        return ResponseEntity.ok(image.getId());
+//    }
 
     @GetMapping("/{imageId}")
     public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) throws IOException {
-        byte[] imageBytes = imageService.getImage(imageId);
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+        Image image = imageService.getImage(imageId);
+//        byte[] imageBytes = imageService.getImageData(imageId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(image.getMediaType()));
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(image.getData());
+//        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getData());
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
