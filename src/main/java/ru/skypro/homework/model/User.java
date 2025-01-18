@@ -17,10 +17,12 @@ public class User {
     private String lastName;        //фамилия пользователя
     private String phone;           //телефон пользователя
     @Enumerated(EnumType.STRING)
+
     private RoleDto roleDto;        //роль пользователя
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;           //ссылка на аватар пользователя
+
     private String password;
 
     public User(Integer id, String email, String firstName, String lastName, String phone, RoleDto roleDto, Image image, String password) {
