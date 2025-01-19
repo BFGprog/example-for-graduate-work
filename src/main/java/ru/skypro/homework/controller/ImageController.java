@@ -18,7 +18,7 @@ import java.io.IOException;
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @Slf4j
-@RequestMapping("/images")
+@RequestMapping("/image")
 public class ImageController {
     private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
     private final ImageService imageService;
