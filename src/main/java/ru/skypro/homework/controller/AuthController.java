@@ -46,7 +46,12 @@ public class AuthController {
     @Tag(name = "Авторизация")
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
-        log.info("1 login");
+        log.info("1 login {}",loginDto.getUsername());
+        String b=loginDto.getUsername();
+        String c=loginDto.getPassword();
+        boolean a=authService.login(loginDto.getUsername(), loginDto.getPassword());
+
+
         try {
             if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
                 return ResponseEntity.ok().body("Авторизация успешна");

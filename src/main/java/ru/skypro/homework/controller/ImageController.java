@@ -34,15 +34,9 @@ public class ImageController {
 //        return ResponseEntity.ok(image.getId());
 //    }
 
-    @GetMapping("/{imageId}")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) throws IOException {
-        Image image = imageService.getImage(imageId);
-//        byte[] imageBytes = imageService.getImageData(imageId);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(image.getMediaType()));
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(image.getData());
-//        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image.getData());
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+//    @GetMapping("/{imageId}")
+//    public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) throws IOException {
+//        byte[] imageBytes = imageService.getImage(imageId);
+//        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+//    }
 }

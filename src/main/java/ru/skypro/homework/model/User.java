@@ -18,20 +18,20 @@ public class User {
     private String phone;           //телефон пользователя
     @Enumerated(EnumType.STRING)
 
-    private RoleDto roleDto;        //роль пользователя
+    private RoleDto role;        //роль пользователя
     @OneToOne
     @JoinColumn(name = "image_id")
     private Image image;           //ссылка на аватар пользователя
 
     private String password;
 
-    public User(Integer id, String email, String firstName, String lastName, String phone, RoleDto roleDto, Image image, String password) {
+    public User(Integer id, String email, String firstName, String lastName, String phone, RoleDto role, Image image, String password) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.roleDto = roleDto;
+        this.role = role;
         this.image = image;
         this.password = password;
     }
@@ -44,12 +44,12 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && roleDto == user.roleDto && Objects.equals(image, user.image) && Objects.equals(password, user.password);
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && role == user.role && Objects.equals(image, user.image) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, firstName, lastName, phone, roleDto, image, password);
+        return Objects.hash(id, email, firstName, lastName, phone, role, image, password);
     }
 
     public String getPassword() {
@@ -101,11 +101,11 @@ public class User {
     }
 
     public RoleDto getRoleDto() {
-        return roleDto;
+        return role;
     }
 
-    public void setRoleDto(RoleDto roleDto) {
-        this.roleDto = roleDto;
+    public void setRoleDto(RoleDto role) {
+        this.role = role;
     }
 
     public Image getImage() {
@@ -124,7 +124,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
-                ", roleDto=" + roleDto +
+                ", roleDto=" + role +
                 ", image='" + image + '\'' +
                 '}';
     }

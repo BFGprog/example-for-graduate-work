@@ -11,6 +11,7 @@ import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDTO;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.mapper.UserMapper;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.ImageService;
@@ -28,7 +29,8 @@ public class UsersServiceImpl implements UsersService {
     private final ImageService imageService;
     private final UserMapper userMapper;
 
-    public UsersServiceImpl(UserMapper userMapper, UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService) {
+
+    public UsersServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
@@ -36,29 +38,29 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public void setPassword(NewPasswordDto newPasswordDto) {
+    public String setPassword(NewPasswordDto newPasswordDto) {
         // Получаем текущего аутентифицированного пользователя
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
         // Находим пользователя по email
-        Optional<User> optionalUser = (userRepository.findByEmail(email));
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
-            throw new RuntimeException();
+            return "Пользователь не найден";
         }
 
         User user = optionalUser.get();
 
         // Проверяем, совпадает ли текущий пароль
         if (!passwordEncoder.matches(newPasswordDto.getCurrentPassword(), user.getPassword())) {
-            throw new RuntimeException();
-
+            return "Текущий пароль неверен";
         }
 
         // Устанавливаем новый пароль
         user.setPassword(passwordEncoder.encode(newPasswordDto.getNewPassword()));
         userRepository.save(user);
 
+        return "Пароль успешно изменен";
     }
 
     @Override
@@ -102,15 +104,19 @@ public class UsersServiceImpl implements UsersService {
 //        return null;
 //    }
 
-    @Override
-    public void uploadImage(MultipartFile file) throws IOException {
-        log.info("@@@ uploadImage");
-        String username = objectAuthentication();
-        User user = (userRepository.findByEmail(username)).orElseThrow();
-        user.setImage(imageService.uploadImage(file));
-        log.info("uploadImage {}", user);
-        userRepository.save(user);
-    }
+//    @Override
+//    public void uploadImage(MultipartFile file) throws IOException {
+//        log.info("@@@ uploadImage");
+//        String username = objectAuthentication();
+//        User user = (userRepository.findByEmail(username)).orElseThrow();
+//        user.setImage(imageService.uploadImage(file));
+//        log.info("uploadImage {}", user);
+//        userRepository.save(user);
+//    }
+@Override
+public String uploadImage(MultipartFile file) throws IOException {
+    return null;
+}
 //        // Получаем текущего аутентифицированного пользователя
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        String email = authentication.getName();

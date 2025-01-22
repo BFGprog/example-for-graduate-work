@@ -5,16 +5,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.AdDto;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ExtendedAdDto;
 import ru.skypro.homework.exception.AdNotFoundException;
+import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.AdRepository;
+import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.security.UserAuthenticationService;
 import ru.skypro.homework.service.AdsService;
+import ru.skypro.homework.service.ImageService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +31,11 @@ public class AdsServiceImpl implements AdsService {
 
     private final AdRepository adRepository;
     private final UserRepository userRepository;
+    private final AdMapper adMapper;
+    private final ImageService imageService;
+    private final ImageRepository imagesRepository;
+    private final UserAuthenticationService userAuthenticationService;
+
 
     @Override
     public Ads getAllAds() {
@@ -36,21 +47,22 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public Ads addAds(MultipartFile image, CreateOrUpdateAdDto ad, Authentication authentication) {
-        if (ad == null || authentication == null) {
+    public Ads addAd(MultipartFile image, CreateOrUpdateAdDto adDto) throws IOException {
+        if (adDto == null) {
             throw new IllegalArgumentException("Данные объявления или аутентификации не могут быть null");
         }
         log.info("Добавление нового объявления");
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        User user = userAuthenticationService.getCurrentUserFromDB();
+        Ad ad=adMapper.dtoToAd(adDto);
+        ad.setUser(user);
+        ad.setImage("Картинка");
+        Ad adsFromDb = adRepository.save(ad);
 
-        Ad newAd = new Ad();
-        newAd.setTitle(ad.getTitle());
-        newAd.setPrice(ad.getPrice());
-        newAd.setImage(saveImage(image));
-        newAd.setUser(user);
-        adRepository.save(newAd);
-        return new Ads(1, List.of(mapToAdDto(newAd)));
+        imageService.saveImage(image, ad);
+        AdDto adDtoFromDb = adMapper.adToDto(adsFromDb,image);
+
+
+        return new Ads(1, List.of(mapToAdDto(ad)));
     }
 
     @Override
@@ -61,7 +73,12 @@ public class AdsServiceImpl implements AdsService {
                 .map(this::mapToAdDto)
                 .collect(Collectors.toList()));
     }
-
+    /**
+     * Удаляет объявление по его идентификатору.
+     *
+     * @param id идентификатор объявления для удаления.
+     * @throws IOException если произошла ошибка при удалении изображения.
+     */
     @Override
     public void removeAd(Integer id, Authentication authentication) {
         log.info("Удаление объявления с ID: {}", id);
@@ -70,7 +87,7 @@ public class AdsServiceImpl implements AdsService {
         if (!ad.getUser().getEmail().equals(authentication.getName())) {
             throw new RuntimeException("Нет прав на удаление объявления");
         }
-        adRepository.delete(ad);
+        adRepository.deleteById(id);
     }
 
     @Override

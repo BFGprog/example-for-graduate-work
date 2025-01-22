@@ -1,58 +1,49 @@
 package ru.skypro.homework.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Objects;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="image")
+@Table(name = "image")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Image {
-    @SequenceGenerator(name = "generatorImageId", allocationSize = 1)
+
+    /**
+     * Уникальный идентификатор изображения (первичный ключ).
+     * Генерируется автоматически при добавлении записи в базу данных.
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "generatorImageId")
-    private Long id;
-    private byte[] data;
-    private String mediaType;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    public String getMediaType() {
-        return mediaType;
-    }
+    /**
+     * Путь к изображению в файловой системе или URL.
+     * Поле обязательно для заполнения (валидация через @NotNull).
+     */
+    @Column(name = "filepath")
+    private String filePath; // Путь к файлу изображения
 
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-    }
+    @Column(name = "pathforendpoint")
+    private String pathForEndpoint; // Путь для доступа к изображению через API
+//    /**
+//     * Бинарные данные изображения (опционально).
+//     * Используется тип LONGBLOB для хранения больших объектов.
+//     */
+//    @Lob
+//    @Column(nullable = false)
+//    private byte[] data;
+    @Column(name = "mediatype")
+    private String mediaType; // Тип медиа (например, image/png)
 
-    @Override
-    public String toString() {
-        return "Image{" +
-                "id=" + id +
-                ", data=" + Arrays.toString(data) +
-                '}';
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Image image = (Image) o;
-        return Objects.equals(id, image.id) && Arrays.equals(data, image.data);
-    }
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(id);
-        result = 31 * result + Arrays.hashCode(data);
-        return result;
-    }
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public byte[] getData() {
-        return data;
-    }
-    public void setData(byte[] data) {
-        this.data = data;
-    }
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ads_id")
+    private Ad ad; // Связь с объявлением, к которому относится изображение
+
+
 }

@@ -3,6 +3,7 @@ package ru.skypro.homework.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,14 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserAuthenticationService userAuthenticationService;
     private final UserRepository userRepository;
-
+    private final UserDetailsService userDetailsService;
     private final UserMapper userMapper;
     private final PasswordEncoder encoder;
 
-    public AuthServiceImpl(UserAuthenticationService userAuthenticationService, UserRepository userRepository, UserMapper userMapper, PasswordEncoder encoder) {
+    public AuthServiceImpl(UserAuthenticationService userAuthenticationService, UserRepository userRepository, UserDetailsService userDetailsService, UserMapper userMapper, PasswordEncoder encoder) {
         this.userAuthenticationService = userAuthenticationService;
         this.userRepository = userRepository;
+        this.userDetailsService = userDetailsService;
         this.userMapper = userMapper;
         this.encoder = encoder;
 

@@ -59,11 +59,11 @@ public class Ad {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    /**
-     * Дата и время создания объявления.
-     */
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+//    /**
+//     * Дата и время создания объявления.
+//     */
+//    @Column(name = "created_at", nullable = false)
+//    private LocalDateTime createdAt;
 
     /**
      * Пользователь, создавший объявление.
