@@ -44,7 +44,7 @@ public class Comment {
      * Используется ленивая загрузка (FetchType.LAZY) для оптимизации.
      * Поле обязательно для заполнения (nullable = false).
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -53,7 +53,7 @@ public class Comment {
      * Используется ленивая загрузка (FetchType.LAZY) для оптимизации.
      * Поле обязательно для заполнения (nullable = false).
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "ad_id", nullable = false)
     private Ad ad;
 }

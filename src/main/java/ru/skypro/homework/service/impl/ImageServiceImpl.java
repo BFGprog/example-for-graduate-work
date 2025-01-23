@@ -15,7 +15,6 @@ import java.nio.file.Paths;
 public class ImageServiceImpl  implements ImageService{
 
     private final ImageRepository imageRepository;
-    private final String uploadDir = "uploads/"; // Директория для сохранения изображений
 
     public ImageServiceImpl(ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
@@ -23,11 +22,6 @@ public class ImageServiceImpl  implements ImageService{
 
     @Override
     public Image uploadImage(MultipartFile file) throws IOException {
-        // Создаем директорию, если она не существует
-//        Path uploadPath = Paths.get(uploadDir);
-//        if (!Files.exists(uploadPath)) {
-//            Files.createDirectories(uploadPath);
-//        }
 
         try (InputStream is = file.getInputStream();
              ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -49,7 +43,6 @@ public class ImageServiceImpl  implements ImageService{
         return imageRepository.findById(imageId)
                 .orElseThrow(() -> new RuntimeException("Изображение не найдено"));
 
-//        Path filePath = Paths.get((String) image.getId());
     }
 
     @Override
@@ -57,7 +50,6 @@ public class ImageServiceImpl  implements ImageService{
         Image image = imageRepository.findById(imageId)
                 .orElseThrow(() -> new RuntimeException("Изображение не найдено"));
 
-//        Path filePath = Paths.get((String) image.getId());
         return image.getData();
     }
 }

@@ -22,6 +22,9 @@ public class ExtendedAdDto {
     @NotBlank(message = "Фамилия автора обязательна")
     private String authorLastName;
 
+    @Min(value = 0, message = "Цена не может быть отрицательной")
+    private Integer price;
+
     private String description;
 
     @NotBlank(message = "Логин автора обязателен")
@@ -32,9 +35,6 @@ public class ExtendedAdDto {
 
     @NotBlank(message = "Телефон автора обязателен")
     private String phone;
-
-    @Min(value = 0, message = "Цена не может быть отрицательной")
-    private String price;
 
     @NotBlank(message = "Заголовок обязателен")
     private String title;
