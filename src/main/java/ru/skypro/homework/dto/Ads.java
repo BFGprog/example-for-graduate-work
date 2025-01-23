@@ -23,9 +23,9 @@ public class Ads {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class AdDto {
-        private Integer id;
+        private Integer pk;
         private String title;
-        private String price;
+        private Integer price;
         private String image;
         private Integer author;
     }

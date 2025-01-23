@@ -6,18 +6,20 @@ import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ExtendedAdDto;
 
+import java.io.IOException;
+
 public interface AdsService {
     Ads getAllAds();
 
-    Ads addAds(MultipartFile image, CreateOrUpdateAdDto ad, Authentication authentication);
+    void addAds(MultipartFile image, CreateOrUpdateAdDto ad) throws IOException;
 
     Ads getUserAds(Authentication authentication);
 
-    void removeAd(Integer id, Authentication authentication);
+    void removeAd(Integer id);
 
     ExtendedAdDto getAdById(Integer id);
 
-    Ads updateAdById(Integer id, CreateOrUpdateAdDto ad, Authentication authentication);
+    void updateAdById(Integer id, CreateOrUpdateAdDto ad, Authentication authentication);
 
-    String updateImageAd(Integer id, MultipartFile image, Authentication authentication);
+    void updateImageAd(Integer id, MultipartFile image, Authentication authentication) throws IOException;
 }

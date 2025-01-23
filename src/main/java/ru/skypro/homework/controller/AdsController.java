@@ -2,8 +2,10 @@ package ru.skypro.homework.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -13,15 +15,21 @@ import ru.skypro.homework.dto.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ExtendedAdDto;
 import ru.skypro.homework.service.AdsService;
 
+import java.io.IOException;
+
 
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
+@Slf4j
 @RequestMapping("/ads")
 @Tag(name = "Объявления")
 public class AdsController {
 
     private final AdsService adsService;
     private static final Logger logger = LoggerFactory.getLogger(AdsController.class);
+    private MultipartFile image;
+    private CreateOrUpdateAdDto ad;
+
     public AdsController(AdsService adsService) {
         this.adsService = adsService;
     }
@@ -32,13 +40,13 @@ public class AdsController {
         return adsService.getAllAds();
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Добавление объявления")
-    public Ads addAd(@RequestParam("image") MultipartFile image,
-                     @RequestBody CreateOrUpdateAdDto ad,
-                     Authentication authentication) {
-        return adsService.addAds(image, ad, authentication);
+    public void addAd(@RequestParam("image") MultipartFile image,
+                      @RequestPart("properties") CreateOrUpdateAdDto ad) throws IOException {
+        log.info("---- addAd {}", ad);
+        adsService.addAds(image, ad);
     }
 
     @GetMapping("/me")
@@ -51,8 +59,8 @@ public class AdsController {
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
     @Operation(summary = "Удаление объявления")
-    public void removeAd(@PathVariable Integer id, Authentication authentication) {
-        adsService.removeAd(id, authentication);
+    public void removeAd(@PathVariable Integer id) {
+        adsService.removeAd(id);
     }
 
     @GetMapping("{id}")
@@ -64,10 +72,10 @@ public class AdsController {
     @PatchMapping("{id}")
     @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
     @Operation(summary = "Обновление информации об объявлении")
-    public Ads updateAdById(@PathVariable Integer id,
+    public void updateAdById(@PathVariable Integer id,
                             @RequestBody CreateOrUpdateAdDto ad,
                             Authentication authentication) {
-        return adsService.updateAdById(id, ad, authentication);
+        adsService.updateAdById(id, ad, authentication);
     }
 
     @PatchMapping("{id}/image")
@@ -75,7 +83,7 @@ public class AdsController {
     @Operation(summary = "Обновление картинки объявления")
     public void updateImageAd(@PathVariable Integer id,
                                 @RequestParam("image") MultipartFile image,
-                                Authentication authentication) {
+                                Authentication authentication) throws IOException {
         adsService.updateImageAd(id, image, authentication);
     }
 }
