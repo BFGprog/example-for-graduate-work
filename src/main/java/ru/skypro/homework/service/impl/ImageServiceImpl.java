@@ -28,13 +28,16 @@ import java.util.UUID;
 public class ImageServiceImpl implements ImageService {
     private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
     private final ImageRepository imageRepository;
+
     private final Path path; // Директория для сохранения изображений
+
 
     public ImageServiceImpl(ImageRepository imageRepository,
                             @Value("${application.image-dir-name}") String avatarsDirName) {
         this.imageRepository = imageRepository;
         this.path = Path.of(avatarsDirName); // Инициализация пути к директории
     }
+
 
 
     @Override
@@ -44,11 +47,13 @@ public class ImageServiceImpl implements ImageService {
         Files.write(getFilePathFromDb, image.getBytes());
         imageRepository.save(imageForDb);
         logger.info("Изображение сохранено в объявление: {}", ads.getPk());
+
     }
 
     private Image createImageEntity(MultipartFile image, Ad ads) {
         String extension = StringUtils.getFilenameExtension(image.getOriginalFilename());
         Path avatarsPath = path.resolve(UUID.randomUUID() + "." + extension);
+
 
         Image imageForDb = new Image();
         imageForDb.setAd(ads);
@@ -56,5 +61,6 @@ public class ImageServiceImpl implements ImageService {
         imageForDb.setFilePath(avatarsPath.toString());
         imageForDb.setMediaType(image.getContentType());
         return imageForDb;
+
     }
 }

@@ -26,8 +26,10 @@ public class CreateOrUpdateAdDto {
 
     @Min(value = 0, message = "Цена не может быть отрицательной")
     @NotNull(message = "Цена обязательна")
+
     private String price;
 
     @Schema(type = "string", description = "Описание", minLength = 8, maxLength = 64)
+
     private String description;
 }

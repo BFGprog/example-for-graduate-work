@@ -2,6 +2,7 @@ package ru.skypro.homework.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,14 +18,20 @@ import ru.skypro.homework.service.AdsService;
 
 import java.io.IOException;
 
+
+
+
+
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
+@Slf4j
 @RequestMapping("/ads")
 @Tag(name = "Объявления")
 public class AdsController {
 
     private final AdsService adsService;
     private static final Logger logger = LoggerFactory.getLogger(AdsController.class);
+
     public AdsController(AdsService adsService)
     {
         this.adsService = adsService;
@@ -47,6 +54,7 @@ public class AdsController {
      * @throws IOException Если произошла ошибка при обработке изображения.
      */
 
+
     @PostMapping(consumes = "multipart/form-data")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Добавление объявления")
@@ -57,6 +65,7 @@ public class AdsController {
             logger.info("Обьявление успешно добавлено");
 
         return addAd;
+
     }
 
     @GetMapping("/me")
@@ -69,8 +78,8 @@ public class AdsController {
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
     @Operation(summary = "Удаление объявления")
-    public void removeAd(@PathVariable Integer id, Authentication authentication) {
-        adsService.removeAd(id, authentication);
+    public void removeAd(@PathVariable Integer id) {
+        adsService.removeAd(id);
     }
 
     @GetMapping("{id}")
@@ -86,13 +95,15 @@ public class AdsController {
     @PatchMapping("{id}")
     @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
     @Operation(summary = "Обновление информации об объявлении")
-    public Ads updateAdById(@PathVariable Integer id,
+    public void updateAdById(@PathVariable Integer id,
                             @RequestBody CreateOrUpdateAdDto ad,
                             Authentication authentication) {
+
         logger.info("Обновление информации по объявлению: ",id);
         Ads createOrUpdateAdDto= adsService.updateAdById(id, ad, authentication);
         logger.info("Обновлена информация по объявлению: ",id);
         return adsService.updateAdById(id, ad, authentication);
+
     }
 
     @PatchMapping("{id}/image")
@@ -100,7 +111,9 @@ public class AdsController {
     @Operation(summary = "Обновление картинки объявления")
     public String updateImageAd(@PathVariable Integer id,
                                 @RequestParam("image") MultipartFile image,
+
                                 Authentication authentication) {
         return adsService.updateImageAd(id, image, authentication);
+
     }
 }

@@ -20,44 +20,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Ad {
 
-    /**
-     * Уникальный идентификатор объявления (первичный ключ).
-     * Генерируется автоматически при добавлении записи в базу данных.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk;
 
-    /**
-     * Ссылка на изображение объявления.
-     * Поле обязательно для заполнения.
-     */
-    @Column(columnDefinition = "TEXT", nullable = false)
-    @NotNull(message = "Ссылка на изображение обязательна")
-    private String image;
-
-    /**
-     * Цена объявления.
-     * Поле обязательно для заполнения.
-     * Цена не может быть отрицательной.
-     */
     @Min(value = 0, message = "Цена не может быть отрицательной")
     @NotNull(message = "Цена обязательна")
-    private String price;
+    private Integer price;
 
-    /**
-     * Заголовок объявления.
-     * Поле обязательно для заполнения.
-     */
     @Column(columnDefinition = "TEXT", nullable = false)
     @NotNull(message = "Заголовок обязателен")
     private String title;
 
-    /**
-     * Описание объявления.
-     */
     @Column(columnDefinition = "TEXT")
     private String description;
+
 
 //    /**
 //     * Дата и время создания объявления.
@@ -65,12 +42,8 @@ public class Ad {
 //    @Column(name = "created_at", nullable = false)
 //    private LocalDateTime createdAt;
 
-    /**
-     * Пользователь, создавший объявление.
-     * Используется ленивая загрузка (FetchType.LAZY) для оптимизации.
-     * Поле обязательно для заполнения (nullable = false).
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
