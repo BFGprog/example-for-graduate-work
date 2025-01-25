@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Класс, представляющий сущность "Объявление".
@@ -42,4 +43,7 @@ public class Ad {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL)
+    private List<Comment> comment;
 }

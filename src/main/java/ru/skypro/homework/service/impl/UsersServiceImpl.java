@@ -67,7 +67,7 @@ public class UsersServiceImpl implements UsersService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = (userRepository.findByEmail(username)).orElseThrow();
-
+        log.info("-- getUser {}", user.getFirstName());
         // Преобразуем User в UserDto
         return userMapper.toUserDto(user);
     }
@@ -80,27 +80,6 @@ public class UsersServiceImpl implements UsersService {
         User updateUser = userMapper.toUser(updateUserDTODto, user);
         userRepository.save(updateUser);
     }
-//        // Получаем текущего аутентифицированного пользователя
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String email = authentication.getName();
-//
-//        // Находим пользователя по email
-//        Optional<User> optionalUser = userRepository.findByEmail(email);
-//        if (optionalUser.isEmpty()) {
-//            throw new RuntimeException();
-//        }
-//
-//        User user = optionalUser.get();
-//
-//        // Обновляем данные пользователя
-//        user.setFirstName(userDto.getFirstName());
-//        user.setLastName(userDto.getLastName());
-//        user.setPhone(userDto.getPhone());
-//
-//        userRepository.save(user);
-//
-//        return null;
-//    }
 
     @Override
     public void uploadImage(MultipartFile file) throws IOException {
@@ -111,26 +90,6 @@ public class UsersServiceImpl implements UsersService {
         log.info("uploadImage {}", user);
         userRepository.save(user);
     }
-//        // Получаем текущего аутентифицированного пользователя
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String email = authentication.getName();
-//
-//        // Находим пользователя по email
-//        Optional<User> optionalUser = userRepository.findByEmail(email);
-//        if (optionalUser.isEmpty()) {
-//            throw new RuntimeException();
-//
-//
-//        User user = optionalUser.get();
-//
-//        // Загружаем изображение через ImageService
-//        Image image = imageService.uploadImage(file);
-//
-//        // Обновляем изображение у пользователя
-//        user.setImage(image);
-//        userRepository.save(user);
-//
-//    }
 
     private String objectAuthentication() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

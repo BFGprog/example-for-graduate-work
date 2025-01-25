@@ -13,13 +13,13 @@ public interface AdsService {
 
     void addAds(MultipartFile image, CreateOrUpdateAdDto ad) throws IOException;
 
-    Ads getUserAds(Authentication authentication);
+    Ads getUserAds();
 
     void removeAd(Integer id);
 
     ExtendedAdDto getAdById(Integer id);
 
-    void updateAdById(Integer id, CreateOrUpdateAdDto ad, Authentication authentication);
+    void updateAdById(Integer id, CreateOrUpdateAdDto ad);
 
-    void updateImageAd(Integer id, MultipartFile image, Authentication authentication) throws IOException;
+    void updateImageAd(Integer id, MultipartFile image) throws IOException;
 }
