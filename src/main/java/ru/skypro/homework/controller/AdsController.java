@@ -41,7 +41,6 @@ public class AdsController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Добавление объявления")
     public void addAd(@RequestParam("image") MultipartFile image,
                       @RequestPart("properties") CreateOrUpdateAdDto ad) throws IOException {
@@ -50,14 +49,13 @@ public class AdsController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Получение объявлений авторизованного пользователя")
-    public Ads getUserAds(Authentication authentication) {
-        return adsService.getUserAds(authentication);
+    public Ads getUserAds() {
+        return adsService.getUserAds();
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @adsServiceImpl.verificationAuthorAd(#id)")
     @Operation(summary = "Удаление объявления")
     public void removeAd(@PathVariable Integer id) {
         adsService.removeAd(id);
@@ -70,20 +68,18 @@ public class AdsController {
     }
 
     @PatchMapping("{id}")
-    @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @adsServiceImpl.verificationAuthorAd(#id)")
     @Operation(summary = "Обновление информации об объявлении")
     public void updateAdById(@PathVariable Integer id,
-                            @RequestBody CreateOrUpdateAdDto ad,
-                            Authentication authentication) {
-        adsService.updateAdById(id, ad, authentication);
+                            @RequestBody CreateOrUpdateAdDto ad) {
+        adsService.updateAdById(id, ad);
     }
 
     @PatchMapping("{id}/image")
-    @PreAuthorize("hasRole('ADMIN') or @adsServiceImpl.getAdById(#id).user.email.equals(authentication.name)")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @adsServiceImpl.verificationAuthorAd(#id)")
     @Operation(summary = "Обновление картинки объявления")
     public void updateImageAd(@PathVariable Integer id,
-                                @RequestParam("image") MultipartFile image,
-                                Authentication authentication) throws IOException {
-        adsService.updateImageAd(id, image, authentication);
+                                @RequestParam("image") MultipartFile image) throws IOException {
+        adsService.updateImageAd(id, image);
     }
 }

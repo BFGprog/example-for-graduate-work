@@ -37,6 +37,15 @@ public class AdsServiceImpl implements AdsService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ((UserDetails) authentication.getPrincipal()).getUsername();
     }
+
+    public boolean verificationAuthorAd(Integer id) {
+        String authentication = objectAuthentication();
+        log.info("authentication {}", authentication);
+        Ad ad = adRepository.findById(id)
+                .orElseThrow(() -> new AdNotFoundException("Объявление не найдено"));
+        return ad.getUser().getEmail().equals(authentication);
+    }
+
     @Override
     public Ads getAllAds() {
         log.info("Получение всех объявлений");
@@ -66,9 +75,10 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public Ads getUserAds(Authentication authentication) {
-        log.info("Получение объявлений авторизованного пользователя");
-        List<Ad> userAds = adRepository.findByUserEmail(authentication.getName());
+    public Ads getUserAds() {
+        String authentication = objectAuthentication();
+        log.info("--- Получение объявлений авторизованного пользователя");
+        List<Ad> userAds = adRepository.findByUserEmail(authentication);
         return new Ads(userAds.size(), userAds.stream()
                 .map(adMapper::mapToAdDto)
                 .collect(Collectors.toList()));
@@ -80,11 +90,12 @@ public class AdsServiceImpl implements AdsService {
         String authentication = objectAuthentication();
         Ad ad = adRepository.findById(id)
                 .orElseThrow(() -> new AdNotFoundException("Объявление не найдено"));
-        if (!ad.getUser().getEmail().equals(authentication)) {
-            throw new RuntimeException("Нет прав на удаление объявления");
-        }
+//        if (!ad.getUser().getEmail().equals(authentication)) {
+//            throw new RuntimeException("Нет прав на удаление объявления");
+//        }
         adRepository.delete(ad);
     }
+
 
     @Override
     public ExtendedAdDto getAdById(Integer id) {
@@ -92,38 +103,39 @@ public class AdsServiceImpl implements AdsService {
         Ad ad = adRepository.findById(id)
                 .orElseThrow(() -> new AdNotFoundException("Объявление не найдено"));
         String username = objectAuthentication();
-        User user = (userRepository.findByEmail(username)).orElseThrow();
+        User user = (userRepository.findByEmail(ad.getUser().getEmail())).orElseThrow();
         return adMapper.mapToExtendedAdDto(ad, user);
     }
 
     @Override
-    public void updateAdById(Integer id, CreateOrUpdateAdDto ad, Authentication authentication) {
+    public void updateAdById(Integer id, CreateOrUpdateAdDto ad) {
         log.info("Обновление объявления с ID: {}", id);
+        String authentication = objectAuthentication();
+
         Ad existingAd = adRepository.findById(id)
                 .orElseThrow(() -> new AdNotFoundException("Объявление не найдено"));
-        if (!existingAd.getUser().getEmail().equals(authentication.getName())) {
-            throw new RuntimeException("Нет прав на обновление объявления");
-        }
+//        if (!existingAd.getUser().getEmail().equals(authentication)) {
+//            throw new RuntimeException("Нет прав на обновление объявления");
+//        }
         existingAd.setTitle(ad.getTitle());
         existingAd.setPrice(ad.getPrice());
+        existingAd.setDescription(ad.getDescription());
         adRepository.save(existingAd);
 //        return new Ads(1, List.of(mapToAdDto(existingAd)));
     }
 
     @Override
-    public void updateImageAd(Integer id, MultipartFile image, Authentication authentication) throws IOException {
+    public void updateImageAd(Integer id, MultipartFile image) throws IOException {
         log.info("Обновление картинки объявления с ID: {}", id);
+        String authentication = objectAuthentication();
         Ad existingAd = adRepository.findById(id)
                 .orElseThrow(() -> new AdNotFoundException("Объявление не найдено"));
-        if (!existingAd.getUser().getEmail().equals(authentication.getName())) {
-            throw new RuntimeException("Нет прав на обновление картинки");
-        }
+//        if (!existingAd.getUser().getEmail().equals(authentication)) {
+//            throw new RuntimeException("Нет прав на обновление картинки");
+//        }
         existingAd.setImage(imageService.uploadImage(image));
         adRepository.save(existingAd);
     }
-
-
-
 
 
     private String saveImage(MultipartFile image) {

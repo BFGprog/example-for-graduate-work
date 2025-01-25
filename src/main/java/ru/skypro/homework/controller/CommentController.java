@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,6 +41,7 @@ public class CommentController {
     }
 
     @PatchMapping("/{adId}/comments/{commentId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @commentServiceImpl.verificationAuthorComment(#commentId)")
     @Operation(summary = "Обновить комментарий")
     public ResponseEntity<CommentDto> updateComment(@PathVariable Integer adId,
                                                     @PathVariable Integer commentId,
@@ -48,6 +50,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{adId}/comments/{commentId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or @commentServiceImpl.verificationAuthorComment(#commentId)")
     @Operation(summary = "Удалить комментарий")
     public ResponseEntity<Void> deleteComment(@PathVariable Integer adId,
                                               @PathVariable Integer commentId) {

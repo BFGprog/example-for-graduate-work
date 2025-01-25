@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.model.User;
 
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class UserSecurity implements UserDetails {
     public UserSecurity(User user) {
         this.username = user.getEmail();
         this.password = user.getPassword();
-        this.authorities = Stream.of(user.getRoleDto().name())
+        this.authorities = Stream.of("ROLE_" + user.getRoleDto().name())
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
         log.info("конструктор UserSecurity вызван ");

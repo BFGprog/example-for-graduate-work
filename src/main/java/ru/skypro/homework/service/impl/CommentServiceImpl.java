@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CommentsDto;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
+import ru.skypro.homework.exception.AdNotFoundException;
 import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
@@ -43,6 +44,14 @@ public class CommentServiceImpl implements CommentService {
         return ((UserDetails) authentication.getPrincipal()).getUsername();
     }
 
+    public boolean verificationAuthorComment(Integer id) {
+        String authentication = objectAuthentication();
+        log.info("verificationAuthorComment {}", authentication);
+        User user = (userRepository.findByEmail(authentication)).orElseThrow();
+        Comment comment = (commentRepository.findById(id)).orElseThrow();
+        return comment.getUser().getId().equals(user.getId());
+    }
+
     @Override
     public CommentsDto getCommentsForAd(Integer adPk) {
         List<Comment> comments = commentRepository.findByAdPk(adPk);
@@ -74,21 +83,17 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto updateComment(Integer adPk, Integer commentId, CreateOrUpdateCommentDto commentDto) {
         String authentication = objectAuthentication();
         User user = (userRepository.findByEmail(authentication)).orElseThrow();
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        log.info("--- updateComment {}", user.getFirstName());
+        Comment comment = (commentRepository.findById(commentId)).orElseThrow();
 
-        if (optionalComment.isPresent()) {
-            Comment comment = optionalComment.get();
-            if (comment.getUser().getId().equals(user.getId())) {
-                comment.setText(commentDto.getText());
-                Comment updatedComment = commentRepository.save(comment);
-                log.info("-- updateComment {}", updatedComment);
-                return commentMapper.toCommentDto(updatedComment);
-            } else {
-                throw new RuntimeException("User is not authorized to update this comment");
-            }
+        if (comment.getUser().getId().equals(user.getId())) {
+            comment.setText(commentDto.getText());
+            Comment updatedComment = commentRepository.save(comment);
+            return commentMapper.toCommentDto(updatedComment);
         } else {
-            throw new RuntimeException("Comment not found");
+            throw new RuntimeException("User is not authorized to update this comment");
         }
+
     }
 
     @Override
